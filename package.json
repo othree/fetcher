@@ -1,0 +1,28 @@
+{
+  "name": "fetcher",
+  "version": "0.0.1",
+  "description": "fetch helper",
+  "homepage": "https://github.com/othree/fetcher",
+  "author": {
+    "name": "othree",
+    "url": "https://github.com/othree"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/othree/fetcher.git"
+  },
+  "main": "fetcher.js",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "expect": "*",
+    "istanbul": "*"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "license": "MIT"
+}
