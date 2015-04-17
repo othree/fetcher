@@ -1,6 +1,6 @@
 (function (global, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['exports', 'module', 'param'], factory);
+    define('fetcher', ['exports', 'module', 'param'], factory);
   } else if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
     factory(exports, module, require('jquery-param'));
   } else {
@@ -8,7 +8,7 @@
       exports: {}
     };
     factory(mod.exports, mod, global.param);
-    global.fetcherEs6 = mod.exports;
+    global.fetcher = mod.exports;
   }
 })(this, function (exports, module, _param2) {
   'use strict';
