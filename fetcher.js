@@ -1,6 +1,6 @@
 (function (global, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('fetcher', ['exports', 'module', 'param'], factory);
+    define('fetcher', ['exports', 'module', 'jquery-param'], factory);
   } else if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
     factory(exports, module, require('jquery-param'));
   } else {
@@ -10,7 +10,7 @@
     factory(mod.exports, mod, global.param);
     global.fetcher = mod.exports;
   }
-})(this, function (exports, module, _param2) {
+})(this, function (exports, module, _jqueryParam) {
   'use strict';
 
   var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
@@ -19,7 +19,7 @@
 
   var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var _param3 = _interopRequire(_param2);
+  var _param2 = _interopRequire(_jqueryParam);
 
   var Fetcher = (function () {
     function Fetcher() {
@@ -44,7 +44,7 @@
 
         return param;
       })(function (data) {
-        return _param3(data);
+        return _param2(data);
       })
     }, {
       key: 'request',

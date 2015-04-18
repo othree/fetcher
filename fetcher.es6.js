@@ -1,5 +1,5 @@
 
-import param from 'param';
+import param from 'jquery-param';
 
 class Fetcher {
   constructor() {
