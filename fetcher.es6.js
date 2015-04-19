@@ -3,7 +3,7 @@ import param from 'jquery-param';
 
 // https://github.com/github/fetch/blob/master/fetch.js#L113
 var support = {
-  blob: 'FileReader' in this && 'Blob' in self && (function() {
+  blob: 'FileReader' in self && 'Blob' in self && (function() {
     try {
       new Blob();
       return true
@@ -12,7 +12,7 @@ var support = {
     }
   })(),
   formData: 'FormData' in self
-}
+};
 
 class Fetcher {
   constructor() {
