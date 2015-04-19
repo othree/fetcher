@@ -34,22 +34,21 @@
     formData: 'FormData' in self
   };
 
+  var res = {
+    text: function text(res) {
+      return res.text();
+    },
+    json: function json(res) {
+      return res.json();
+    }
+  };
+
   var Fetcher = (function () {
     function Fetcher() {
       _classCallCheck(this, Fetcher);
     }
 
     _createClass(Fetcher, [{
-      key: 'text',
-      value: function text(res) {
-        return res.text();
-      }
-    }, {
-      key: 'json',
-      value: function json(res) {
-        return res.json();
-      }
-    }, {
       key: 'param',
       value: (function (_param) {
         function param(_x) {
@@ -70,8 +69,11 @@
         var options = arguments[2] === undefined ? {} : arguments[2];
 
         options.method = method;
+        var responseValue = res[options.dataType] || res.text;
 
-        return fetch(url, options);
+        return fetch(url, options).then(function (res) {
+          return [responseValue(res), res];
+        });
       }
     }, {
       key: 'post',
@@ -103,7 +105,8 @@
       value: function getJSON(url, data) {
         var options = arguments[2] === undefined ? {} : arguments[2];
 
-        return this.get(url, data, options).then(this.json);
+        options.dataType = 'json';
+        return this.get(url, data, options);
       }
     }]);
 

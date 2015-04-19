@@ -14,16 +14,13 @@ var support = {
   formData: 'FormData' in self
 };
 
+var res = {
+  text: res => res.text(),
+  json: res => res.json()
+};
+
 class Fetcher {
   constructor() {
-  }
-
-  text(res) {
-    return res.text();
-  }
-
-  json(res) {
-    return res.json();
   }
 
   param(data) {
@@ -32,8 +29,9 @@ class Fetcher {
 
   request(method, url, options = {}) {
     options.method = method;
+    var responseValue = res[options.dataType] || res['text'];
 
-    return fetch(url, options);
+    return fetch(url, options).then( res => [responseValue(res), res] );
   }
 
   post(url, data, options = {}) {
@@ -58,7 +56,8 @@ class Fetcher {
   }
 
   getJSON(url, data, options = {}) {
-    return this.get(url, data, options).then(this.json);
+    options.dataType = 'json'
+    return this.get(url, data, options);
   }
 };
 
