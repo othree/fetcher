@@ -30,14 +30,13 @@ class Fetcher {
     return param(data);
   }
 
-  request(method, url, options) {
-    options = options || {};
+  request(method, url, options = {}) {
     options.method = method;
 
     return fetch(url, options);
   }
 
-  post(url, data, options) {
+  post(url, data, options = {}) {
     if (typeof data === 'string'
      || (support.formdata && FormData.prototype.isPrototypeOf(data))
      || (support.blob && Blob.prototype.isPrototypeOf(data)) ) {
@@ -48,7 +47,7 @@ class Fetcher {
     return this.request('POST', url, data, options);
   }
 
-  get(url, data, options) {
+  get(url, data, options = {}) {
     var urldata = this.param(data);
     if (/\?/.test(url)) {
       url = url + '?' + urldata;
@@ -58,7 +57,7 @@ class Fetcher {
     return this.request('GET', url, options);
   }
 
-  getJSON(url, data, options) {
+  getJSON(url, data, options = {}) {
     return this.get(url, data, options).then(this.json);
   }
 };

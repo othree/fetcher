@@ -66,15 +66,18 @@
       })
     }, {
       key: 'request',
-      value: function request(method, url, options) {
-        options = options || {};
+      value: function request(method, url) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
         options.method = method;
 
         return fetch(url, options);
       }
     }, {
       key: 'post',
-      value: function post(url, data, options) {
+      value: function post(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
         if (typeof data === 'string' || support.formdata && FormData.prototype.isPrototypeOf(data) || support.blob && Blob.prototype.isPrototypeOf(data)) {
           options.body = data;
         } else {
@@ -84,7 +87,9 @@
       }
     }, {
       key: 'get',
-      value: function get(url, data, options) {
+      value: function get(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
         var urldata = this.param(data);
         if (/\?/.test(url)) {
           url = url + '?' + urldata;
@@ -95,7 +100,9 @@
       }
     }, {
       key: 'getJSON',
-      value: function getJSON(url, data, options) {
+      value: function getJSON(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
         return this.get(url, data, options).then(this.json);
       }
     }]);
