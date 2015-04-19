@@ -21,12 +21,30 @@
 
   var _param2 = _interopRequire(_jqueryParam);
 
+  // https://github.com/github/fetch/blob/master/fetch.js#L113
+  var support = {
+    blob: 'FileReader' in undefined && 'Blob' in self && (function () {
+      try {
+        new Blob();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    })(),
+    formData: 'FormData' in self
+  };
+
   var Fetcher = (function () {
     function Fetcher() {
       _classCallCheck(this, Fetcher);
     }
 
     _createClass(Fetcher, [{
+      key: 'text',
+      value: function text(res) {
+        return res.text();
+      }
+    }, {
       key: 'json',
       value: function json(res) {
         return res.json();
@@ -58,6 +76,8 @@
       key: 'post',
       value: function post(url, data, options) {
         if (typeof data === 'string') {
+          options.body = data;
+        } else if (suppor.formdata && FormData.prototype.isPrototypeOf(data)) {
           options.body = data;
         } else {
           options.body = this.param(data);

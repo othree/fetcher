@@ -1,8 +1,25 @@
 
 import param from 'jquery-param';
 
+// https://github.com/github/fetch/blob/master/fetch.js#L113
+var support = {
+  blob: 'FileReader' in this && 'Blob' in self && (function() {
+    try {
+      new Blob();
+      return true
+    } catch(e) {
+      return false
+    }
+  })(),
+  formData: 'FormData' in self
+}
+
 class Fetcher {
   constructor() {
+  }
+
+  text(res) {
+    return res.text();
   }
 
   json(res) {
@@ -22,6 +39,8 @@ class Fetcher {
 
   post(url, data, options) {
     if (typeof data === 'string') {
+      options.body = data;
+    } else if (suppor.formdata && FormData.prototype.isPrototypeOf(data)) {
       options.body = data;
     } else {
       options.body = this.param(data);
