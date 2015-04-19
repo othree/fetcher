@@ -38,9 +38,9 @@ class Fetcher {
   }
 
   post(url, data, options) {
-    if (typeof data === 'string') {
-      options.body = data;
-    } else if (suppor.formdata && FormData.prototype.isPrototypeOf(data)) {
+    if (typeof data === 'string'
+     || (support.formdata && FormData.prototype.isPrototypeOf(data))
+     || (support.blob && Blob.prototype.isPrototypeOf(data)) ) {
       options.body = data;
     } else {
       options.body = this.param(data);
