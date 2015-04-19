@@ -12,7 +12,7 @@ Because of ECMAScript Promise can't resolve two values. There is no good way to 
 One solution is send an object with the sructure:
 
     {
-      value: TransformedResponse,
+      data: TransformedResponse,
       response: ResponseInstance
     }
 
