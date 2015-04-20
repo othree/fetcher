@@ -60,6 +60,13 @@
     xml: 'application/xml'
   };
 
+  var normalizeContentType = function normalizeContentType() {
+    var contentType = arguments[0] === undefined ? 'application/x-www-form-urlencoded; charset=UTF-8' : arguments[0];
+
+    var normalized = shortContentType[contentType];
+    return normalized || contentType;
+  };
+
   var Fetcher = (function () {
     function Fetcher() {
       _classCallCheck(this, Fetcher);
@@ -87,6 +94,9 @@
 
         options.method = method;
 
+        var headers = new Headers(options.headers || {});
+        options.headers = headers;
+
         // auto set to cors if hotname is different
         if (!options.mode) {
           options.mode = isCORS(url) ? 'cors' : 'no-cors';
@@ -104,9 +114,7 @@
 
         // set Content-Type header
         if (options.method === 'POST' || options.method === 'PUT') {
-          var headers = options.headers || {};
-          headers['Content-Type'] = headers['Content-Type'] || 'application/x-www-form-urlencoded; charset=UTF-8';
-          headers['Content-Type'] = shortContentType[headers['Content-Type']] || headers['Content-Type'];
+          headers.set('Content-Type', normalizeContentType(headers.get('Content-Type')));
         }
 
         // set body
