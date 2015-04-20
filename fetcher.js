@@ -104,9 +104,7 @@
     xml: 'application/xml'
   };
 
-  var normalizeContentType = function normalizeContentType() {
-    var contentType = arguments[0] === undefined ? 'application/x-www-form-urlencoded; charset=UTF-8' : arguments[0];
-
+  var normalizeContentType = function normalizeContentType(contentType) {
     var normalized = shortContentType[contentType];
     return normalized || contentType;
   };
@@ -154,19 +152,22 @@
           }
         }
 
-        // set Content-Type header
         if (!rnoContent.test(options.method)) {
+          // grab and delete Content-Type header
+          // fetch will set Content-Type for common cases
           var contentType = normalizeContentType(headers.get('Content-Type'));
-          headers.set('Content-Type', contentType);
-        }
+          headers['delete']('Content-Type');
 
-        // set body
-        if (!rnoContent.test(options.method)) {
+          // set body
           if (typeof data === 'string' || support.formdata && FormData.prototype.isPrototypeOf(data) || support.blob && Blob.prototype.isPrototypeOf(data)) {
+            if (contentType) {
+              headers.set('Content-Type', contentType);
+            }
             options.body = data;
           } else if (contentType === 'application/json') {
+            headers.set('Content-Type', contentType);
             options.body = JSON.stringify(data);
-          } else {
+          } else if (data) {
             options.body = this.param(data);
           }
         }
