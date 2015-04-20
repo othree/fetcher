@@ -17,3 +17,16 @@ One solution is send an object with the sructure:
     ]
 
 This is simpler structure for ES6's destructor.
+
+Example
+-------
+
+    fetcher.get('/api/users', null, {dataType: 'json'}).then( ... )
+
+    fetcher.getJSON('/api/users').then( ... )
+
+    fetcher.post('/api/users', {name: 'John'}).then( ... )
+
+    fetcher.put('/api/users',  {name: 'Wick'}).then( ... )
+
+    fetcher.delete( '/api/users/23').then( ... )
