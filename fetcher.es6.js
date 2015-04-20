@@ -31,6 +31,11 @@ var isCORS = url => {
   return false;
 }
 
+var shortContentType = {
+  json: 'application/json',
+  xml:  'application/xml'
+}
+
 
 class Fetcher {
   constructor() {
@@ -44,6 +49,12 @@ class Fetcher {
     options.method = method;
     if (!options.mode) {
       options.mode = isCORS(url) ? 'cors' : 'no-cors'
+    }
+
+    if (options.method === 'POST') {
+      var headers = options.headers || {};
+      headers["Content-type"] = headers["Content-type"] || 'application/x-www-form-urlencoded; charset=UTF-8';
+      headers["Content-type"] = shortContentType[headers["Content-type"]] || headers["Content-type"];
     }
 
     var responseValue = res[options.dataType] || res['text'];
