@@ -16,7 +16,8 @@ var support = {
 
 var res = {
   text: res => res.text(),
-  json: res => res.json()
+  json: res => res.json(),
+  blob: res => res.blob()
 };
 
 var isCORS = url => {
@@ -32,6 +33,7 @@ var isCORS = url => {
 }
 
 var shortContentType = {
+  "*": '*/*',
   json: 'application/json',
   xml:  'application/xml'
 }
@@ -88,9 +90,27 @@ class Fetcher {
       }
     }
 
-    var responseValue = res[options.dataType] || res['text'];
+    var extractor = null;
+    var dataType = options.dataType? options.dataType.trim() : '*';
+    var accept = '*/*';
+    if (dataType && shortContentType[dataType]) {
+      accept = shortContentType[dataType];
+      if (dataType !== '*') {
+        accept += ',' + shortContentType['*'] + '; q=0.01';
+        extractor = res[options.dataType];
+      }
+    }
 
-    return fetch(url, options).then( res => [responseValue(res), res] );
+    headers.set('Accept', accept);
+
+
+    return fetch(url, options).then( res => {
+      if (!responseValue) {
+        var mimeType = res.headers.get('Content-Type').split(';')[0];
+        extractor = res[mimeType] || res['text'];
+      }
+      return [extractor(res), res];
+    });
   }
 
   delete(url, data, options = {}) {

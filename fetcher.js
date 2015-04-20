@@ -40,6 +40,9 @@
     },
     json: function json(res) {
       return res.json();
+    },
+    blob: function blob(res) {
+      return res.blob();
     }
   };
 
@@ -56,6 +59,7 @@
   };
 
   var shortContentType = {
+    '*': '*/*',
     json: 'application/json',
     xml: 'application/xml'
   };
@@ -126,10 +130,25 @@
           }
         }
 
-        var responseValue = res[options.dataType] || res.text;
+        var extractor = null;
+        var dataType = options.dataType ? options.dataType.trim() : '*';
+        var accept = '*/*';
+        if (dataType && shortContentType[dataType]) {
+          accept = shortContentType[dataType];
+          if (dataType !== '*') {
+            accept += ',' + shortContentType['*'] + '; q=0.01';
+            extractor = res[options.dataType];
+          }
+        }
+
+        headers.set('Accept', accept);
 
         return fetch(url, options).then(function (res) {
-          return [responseValue(res), res];
+          if (!responseValue) {
+            var mimeType = res.headers.get('Content-Type').split(';')[0];
+            extractor = res[mimeType] || res.text;
+          }
+          return [extractor(res), res];
         });
       }
     }, {
