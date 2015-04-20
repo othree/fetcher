@@ -2,7 +2,7 @@
 import param from 'jquery-param';
 
 // https://github.com/jquery/jquery/blob/master/src/ajax.js#L20
-var rnoContent = /^(?:GET|HEAD)$/;
+var rnoContent = /^(?:GET|HEAD|TRACE)$/;
 
 // https://github.com/github/fetch/blob/master/fetch.js#L113
 var support = {
