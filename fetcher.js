@@ -82,18 +82,40 @@
       })
     }, {
       key: 'request',
-      value: function request(method, url) {
-        var options = arguments[2] === undefined ? {} : arguments[2];
+      value: function request(method, url, data) {
+        var options = arguments[3] === undefined ? {} : arguments[3];
 
         options.method = method;
+
+        // auto set to cors if hotname is different
         if (!options.mode) {
           options.mode = isCORS(url) ? 'cors' : 'no-cors';
         }
 
-        if (options.method === 'POST') {
+        // set query parameter
+        if (options.method === 'GET') {
+          var urldata = this.param(data);
+          if (/\?/.test(url)) {
+            url = url + '?' + urldata;
+          } else {
+            url = url + '&' + urldata;
+          }
+        }
+
+        // set Content-Type header
+        if (options.method === 'POST' || options.method === 'PUT') {
           var headers = options.headers || {};
           headers['Content-Type'] = headers['Content-Type'] || 'application/x-www-form-urlencoded; charset=UTF-8';
           headers['Content-Type'] = shortContentType[headers['Content-Type']] || headers['Content-Type'];
+        }
+
+        // set body
+        if (options.method === 'POST' || options.method === 'PUT') {
+          if (typeof data === 'string' || support.formdata && FormData.prototype.isPrototypeOf(data) || support.blob && Blob.prototype.isPrototypeOf(data)) {
+            options.body = data;
+          } else {
+            options.body = this.param(data);
+          }
         }
 
         var responseValue = res[options.dataType] || res.text;
@@ -103,29 +125,18 @@
         });
       }
     }, {
-      key: 'post',
-      value: function post(url, data) {
+      key: 'delete',
+      value: function _delete(url, data) {
         var options = arguments[2] === undefined ? {} : arguments[2];
 
-        if (typeof data === 'string' || support.formdata && FormData.prototype.isPrototypeOf(data) || support.blob && Blob.prototype.isPrototypeOf(data)) {
-          options.body = data;
-        } else {
-          options.body = this.param(data);
-        }
-        return this.request('POST', url, data, options);
+        return this.request('DELETE', url, data, options);
       }
     }, {
       key: 'get',
       value: function get(url, data) {
         var options = arguments[2] === undefined ? {} : arguments[2];
 
-        var urldata = this.param(data);
-        if (/\?/.test(url)) {
-          url = url + '?' + urldata;
-        } else {
-          url = url + '&' + urldata;
-        }
-        return this.request('GET', url, options);
+        return this.request('GET', url, data, options);
       }
     }, {
       key: 'getJSON',
@@ -134,6 +145,44 @@
 
         options.dataType = 'json';
         return this.get(url, data, options);
+      }
+    }, {
+      key: 'head',
+      value: function head(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
+        return this.request('HEAD', url, data, options);
+      }
+    }, {
+      key: 'options',
+      value: (function (_options) {
+        function options(_x2, _x3) {
+          return _options.apply(this, arguments);
+        }
+
+        options.toString = function () {
+          return _options.toString();
+        };
+
+        return options;
+      })(function (url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
+        return this.request('OPTIONS', url, data, options);
+      })
+    }, {
+      key: 'post',
+      value: function post(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
+        return this.request('POST', url, data, options);
+      }
+    }, {
+      key: 'put',
+      value: function put(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
+        return this.request('PUT', url, data, options);
       }
     }]);
 

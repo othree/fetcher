@@ -45,16 +45,40 @@ class Fetcher {
     return param(data);
   }
 
-  request(method, url, options = {}) {
+  request(method, url, data, options = {}) {
     options.method = method;
+
+    // auto set to cors if hotname is different
     if (!options.mode) {
       options.mode = isCORS(url) ? 'cors' : 'no-cors'
     }
 
-    if (options.method === 'POST') {
+    // set query parameter
+    if (options.method === 'GET') {
+      var urldata = this.param(data);
+      if (/\?/.test(url)) {
+        url = url + '?' + urldata;
+      } else {
+        url = url + '&' + urldata;
+      }
+    }
+
+    // set Content-Type header
+    if (options.method === 'POST' || options.method === 'PUT') {
       var headers = options.headers || {};
       headers["Content-Type"] = headers["Content-Type"] || 'application/x-www-form-urlencoded; charset=UTF-8';
       headers["Content-Type"] = shortContentType[headers["Content-Type"]] || headers["Content-Type"];
+    }
+
+    // set body
+    if (options.method === 'POST' || options.method === 'PUT') {
+      if (typeof data === 'string'
+       || (support.formdata && FormData.prototype.isPrototypeOf(data))
+       || (support.blob && Blob.prototype.isPrototypeOf(data)) ) {
+        options.body = data;
+      } else {
+        options.body = this.param(data);
+      }
     }
 
     var responseValue = res[options.dataType] || res['text'];
@@ -62,30 +86,32 @@ class Fetcher {
     return fetch(url, options).then( res => [responseValue(res), res] );
   }
 
-  post(url, data, options = {}) {
-    if (typeof data === 'string'
-     || (support.formdata && FormData.prototype.isPrototypeOf(data))
-     || (support.blob && Blob.prototype.isPrototypeOf(data)) ) {
-      options.body = data;
-    } else {
-      options.body = this.param(data);
-    }
-    return this.request('POST', url, data, options);
+  delete(url, data, options = {}) {
+    return this.request('DELETE', url, data, options);
   }
 
   get(url, data, options = {}) {
-    var urldata = this.param(data);
-    if (/\?/.test(url)) {
-      url = url + '?' + urldata;
-    } else {
-      url = url + '&' + urldata;
-    }
-    return this.request('GET', url, options);
+    return this.request('GET', url, data, options);
   }
 
   getJSON(url, data, options = {}) {
     options.dataType = 'json'
     return this.get(url, data, options);
+  }
+  head(url, data, options = {}) {
+    return this.request('HEAD', url, data, options);
+  }
+
+  options(url, data, options = {}) {
+    return this.request('OPTIONS', url, data, options);
+  }
+
+  post(url, data, options = {}) {
+    return this.request('POST', url, data, options);
+  }
+
+  put(url, data, options = {}) {
+    return this.request('PUT', url, data, options);
   }
 };
 
