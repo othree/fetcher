@@ -163,12 +163,10 @@
         if (!rnoContent.test(options.method)) {
           if (typeof data === 'string' || support.formdata && FormData.prototype.isPrototypeOf(data) || support.blob && Blob.prototype.isPrototypeOf(data)) {
             options.body = data;
+          } else if (headers.get('Content-Type') === 'application/json') {
+            options.body = JSON.stringify(data);
           } else {
-            if (headers.get('Content-Type') === 'application/json') {
-              options.body = JSON.stringify(data);
-            } else {
-              options.body = this.param(data);
-            }
+            options.body = this.param(data);
           }
         }
 
