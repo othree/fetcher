@@ -156,14 +156,15 @@
 
         // set Content-Type header
         if (!rnoContent.test(options.method)) {
-          headers.set('Content-Type', normalizeContentType(headers.get('Content-Type')));
+          var contentType = normalizeContentType(headers.get('Content-Type'));
+          headers.set('Content-Type', contentType);
         }
 
         // set body
         if (!rnoContent.test(options.method)) {
           if (typeof data === 'string' || support.formdata && FormData.prototype.isPrototypeOf(data) || support.blob && Blob.prototype.isPrototypeOf(data)) {
             options.body = data;
-          } else if (headers.get('Content-Type') === 'application/json') {
+          } else if (contentType === 'application/json') {
             options.body = JSON.stringify(data);
           } else {
             options.body = this.param(data);
