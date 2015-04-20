@@ -21,6 +21,10 @@
 
   var _param2 = _interopRequire(_jqueryParam);
 
+  if (typeof global !== 'undefined') {
+    var self = global;
+  }
+
   // https://github.com/jquery/jquery/blob/master/src/ajax.js#L20
   var rnoContent = /^(?:GET|HEAD)$/;
 
@@ -82,11 +86,11 @@
   };
 
   var isCORS = function isCORS(url) {
-    if (document && document.location && /^\w+:\/\//.test(url)) {
+    if (self.document && self.document.location && /^\w+:\/\//.test(url)) {
       var frags = url.replace(/^\w+:\/\//, '');
       var index = url.indexOf('/');
       var hostname = frags.substr(0, index);
-      if (hostname !== document.location.hostname) {
+      if (hostname !== self.document.location.hostname) {
         return true;
       }
     }

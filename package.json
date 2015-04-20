@@ -20,11 +20,12 @@
   },
   "devDependencies": {
     "mocha": "*",
+    "sinon": "*",
     "should": "*",
     "expect": "*",
     "istanbul": "*",
     "es6-promise": "*",
-    "whatwg-fetch ": "*"
+    "node-fetch": "*"
   },
   "scripts": {
     "test": "mocha"
