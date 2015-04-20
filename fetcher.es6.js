@@ -97,7 +97,7 @@ class Fetcher {
 
     // auto set to cors if hotname is different
     if (!options.mode) {
-      options.mode = isCORS(url) ? 'cors' : 'no-cors'
+      options.mode = isCORS(url) ? 'cors' : 'no-cors';
     }
 
     // set query parameter

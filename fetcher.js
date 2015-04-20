@@ -43,12 +43,14 @@
 
   var parseXML = function parseXML(res) {
     var xml;
+    var type = res.headers.get('Content-Type');
+    var mime = type ? type.split(';').unshift() : 'text/xml';
     var text = res.text();
     if (window) {
       // in browser
       // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
       try {
-        xml = new window.DOMParser().parseFromString(text, 'text/xml');
+        xml = new window.DOMParser().parseFromString(text, mime);
       } catch (e) {
         xml = undefined;
       }
@@ -146,9 +148,9 @@
 
         // set query parameter
         if (rnoContent.test(options.method)) {
-          var urldata = this.param(data);
-          if (urldata) {
-            url = url + (/\?/.test(url) ? '&' : '?') + urldata;
+          var query = this.param(data);
+          if (query) {
+            url = url + (/\?/.test(url) ? '&' : '?') + query;
           }
         }
 
@@ -187,7 +189,7 @@
 
         return fetch(url, options).then(function (res) {
           if (!extractor) {
-            var mimeType = res.headers.get('Content-Type').split(';')[0];
+            var mimeType = res.headers.get('Content-Type').split(';').unshift();
             var dataType = mimeType.split(/[\/+]/).pop();
 
             extractor = resTractors[dataType] || resTractors.text;
