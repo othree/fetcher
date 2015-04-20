@@ -19,22 +19,23 @@ var support = {
 
 var parseXML = res => {
   var xml;
+  var text = res.text();
   if (window) {
     // in browser
     // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
     try {
-      xml = ( new window.DOMParser() ).parseFromString( res.text(), "text/xml" );
+      xml = ( new window.DOMParser() ).parseFromString( text, "text/xml" );
     } catch ( e ) {
       xml = undefined;
     }
     if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
-      throw( new Error("Invalid XML: " + data ));
+      throw( new Error("Invalid XML: " + text ));
     }
   } else {
     // node, return plain text
-    xml = res.text();
+    xml = text;
   }
-  return xml;
+  return Promise.resolve(xml);
 }
 
 var resTractors = {
@@ -63,6 +64,7 @@ var isCORS = url => {
 var shortContentType = {
   "*": '*/*',
   json: 'application/json',
+  text: 'text/plain',
   xml:  'application/xml'
 }
 
@@ -96,7 +98,7 @@ class Fetcher {
     if (rnoContent.test(options.method)) {
       var urldata = this.param(data);
       if (urldata) {
-        url = url + (/\?/.test(url) ? '?' : '&') + urldata;
+        url = url + (/\?/.test(url) ? '&' : '?') + urldata;
       }
     }
 
@@ -123,7 +125,7 @@ class Fetcher {
       accept = shortContentType[dataType];
       if (dataType !== '*') {
         accept += ',' + shortContentType['*'] + '; q=0.01';
-        extractor = resTractors[options.dataType];
+        extractor = resTractors[dataType];
       }
     }
 
@@ -136,7 +138,7 @@ class Fetcher {
 
         extractor = resTractors[dataType] || resTractors['text'];
       }
-      return [extractor(res), res];
+      return Promise.all([extractor(res), res]);
     });
   }
 
