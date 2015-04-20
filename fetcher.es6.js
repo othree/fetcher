@@ -19,6 +19,19 @@ var res = {
   json: res => res.json()
 };
 
+var isCORS = url => {
+  if (document && document.location && /^\w+:\/\//.test(url) ) {
+    var frags = url.replace(/^\w+:\/\//, '');
+    var index = url.indexOf('/');
+    var hostname = frags.substr(0, index);
+    if (hostname !== document.location.hostname) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
 class Fetcher {
   constructor() {
   }
@@ -29,6 +42,10 @@ class Fetcher {
 
   request(method, url, options = {}) {
     options.method = method;
+    if (!options.mode) {
+      options.mode = isCORS(url) ? 'cors' : 'no-cors'
+    }
+
     var responseValue = res[options.dataType] || res['text'];
 
     return fetch(url, options).then( res => [responseValue(res), res] );
