@@ -54,3 +54,15 @@ it("POST request parameter", function () {
   var body = args[1].body;
   body.should.equal('{"abc":123}');
 });
+
+/*
+ * Cases
+ * post without content-type
+ * post data with content-type: json, application/json
+ * post json string with content-type
+ * simple content-type test
+ * response json, known by dataType option
+ * response json, known by content-type header
+ * response text
+ * response form-data encoded string
+ */
