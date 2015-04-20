@@ -170,7 +170,7 @@
         if (dataType && shortContentType[dataType]) {
           accept = shortContentType[dataType];
           if (dataType !== '*') {
-            accept += ',' + shortContentType['*'] + '; q=0.01';
+            accept += ', ' + shortContentType['*'] + '; q=0.01';
             extractor = resTractors[dataType];
           }
         }
