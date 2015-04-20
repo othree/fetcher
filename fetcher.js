@@ -35,20 +35,26 @@
   };
 
   var parseXML = function parseXML(res) {
-    // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
-    try {
-      xml = new window.DOMParser().parseFromString(res.text(), 'text/xml');
-    } catch (e) {
-      xml = undefined;
-    }
-
-    if (!xml || xml.getElementsByTagName('parsererror').length) {
-      throw new Error('Invalid XML: ' + data);
+    var xml;
+    if (window) {
+      // in browser
+      // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
+      try {
+        xml = new window.DOMParser().parseFromString(res.text(), 'text/xml');
+      } catch (e) {
+        xml = undefined;
+      }
+      if (!xml || xml.getElementsByTagName('parsererror').length) {
+        throw new Error('Invalid XML: ' + data);
+      }
+    } else {
+      // node, return plain text
+      xml = res.text();
     }
     return xml;
   };
 
-  var res = {
+  var resTractors = {
     arrayBuffer: function arrayBuffer(res) {
       return res.arrayBuffer();
     },
@@ -162,21 +168,18 @@
           accept = shortContentType[dataType];
           if (dataType !== '*') {
             accept += ',' + shortContentType['*'] + '; q=0.01';
-            extractor = res[options.dataType];
+            extractor = resTractors[options.dataType];
           }
         }
 
         headers.set('Accept', accept);
 
         return fetch(url, options).then(function (res) {
-          if (!responseValue) {
+          if (!extractor) {
             var mimeType = res.headers.get('Content-Type').split(';')[0];
-            var dataType = mimeType.split('/')[1] || 'text';
-            if (/\+/.test(dataType)) {
-              dataType = dataType.split('+')[1];
-            }
+            var dataType = mimeType.split(/[\/+]/).pop();
 
-            extractor = res[dataType] || res.text;
+            extractor = resTractors[dataType] || resTractors.text;
           }
           return [extractor(res), res];
         });
