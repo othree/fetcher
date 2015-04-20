@@ -1,7 +1,7 @@
 {
-  "name": "fetcher",
+  "name": "fetch-er",
   "version": "0.0.1",
-  "description": "fetch helper",
+  "description": "WHATWG fetch helper",
   "homepage": "https://github.com/othree/fetcher",
   "author": {
     "name": "othree",
