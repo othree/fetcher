@@ -143,7 +143,7 @@ class Fetcher {
 
     return fetch(url, options).then( res => {
       if (!extractor) {
-        var mimeType = res.headers.get('Content-Type').split(';')[0];
+        var mimeType = res.headers.get('Content-Type').split(';').unshift();
         var dataType = mimeType.split(/[\/+]/).pop();
 
         extractor = resTractors[dataType] || resTractors['text'];
