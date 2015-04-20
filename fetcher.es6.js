@@ -102,9 +102,9 @@ class Fetcher {
 
     // set query parameter
     if (rnoContent.test(options.method)) {
-      var urldata = this.param(data);
-      if (urldata) {
-        url = url + (/\?/.test(url) ? '&' : '?') + urldata;
+      var query = this.param(data);
+      if (query) {
+        url = url + (/\?/.test(url) ? '&' : '?') + query;
       }
     }
 
