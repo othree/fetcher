@@ -14,10 +14,29 @@ var support = {
   formData: 'FormData' in self
 };
 
+var parseXML = res => {
+  // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
+  try {
+    xml = ( new window.DOMParser() ).parseFromString( res.text(), "text/xml" );
+  } catch ( e ) {
+    xml = undefined;
+  }
+
+  if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
+    throw( new Error("Invalid XML: " + data ));
+  }
+  return xml;
+}
+
 var res = {
-  text: res => res.text(),
-  json: res => res.json(),
-  blob: res => res.blob()
+  arrayBuffer: res => res.arrayBuffer(),
+  blob:        res => res.blob(),
+  formData:    res => res.formData(),
+  html:        parseXML,
+  json:        res => res.json(),
+  plain:       res => res.text(),
+  text:        res => res.text(),
+  xml:         parseXML
 };
 
 var isCORS = url => {
@@ -107,7 +126,12 @@ class Fetcher {
     return fetch(url, options).then( res => {
       if (!responseValue) {
         var mimeType = res.headers.get('Content-Type').split(';')[0];
-        extractor = res[mimeType] || res['text'];
+        var dataType = mimeType.split('/')[1] || 'text';
+        if (/\+/.test(dataType)) {
+          dataType = dataType.split('+')[1];
+        }
+
+        extractor = res[dataType] || res['text'];
       }
       return [extractor(res), res];
     });

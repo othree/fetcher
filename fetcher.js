@@ -34,16 +34,41 @@
     formData: 'FormData' in self
   };
 
+  var parseXML = function parseXML(res) {
+    // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
+    try {
+      xml = new window.DOMParser().parseFromString(res.text(), 'text/xml');
+    } catch (e) {
+      xml = undefined;
+    }
+
+    if (!xml || xml.getElementsByTagName('parsererror').length) {
+      throw new Error('Invalid XML: ' + data);
+    }
+    return xml;
+  };
+
   var res = {
-    text: function text(res) {
-      return res.text();
-    },
-    json: function json(res) {
-      return res.json();
+    arrayBuffer: function arrayBuffer(res) {
+      return res.arrayBuffer();
     },
     blob: function blob(res) {
       return res.blob();
-    }
+    },
+    formData: function formData(res) {
+      return res.formData();
+    },
+    html: parseXML,
+    json: function json(res) {
+      return res.json();
+    },
+    plain: function plain(res) {
+      return res.text();
+    },
+    text: function text(res) {
+      return res.text();
+    },
+    xml: parseXML
   };
 
   var isCORS = function isCORS(url) {
@@ -146,7 +171,12 @@
         return fetch(url, options).then(function (res) {
           if (!responseValue) {
             var mimeType = res.headers.get('Content-Type').split(';')[0];
-            extractor = res[mimeType] || res.text;
+            var dataType = mimeType.split('/')[1] || 'text';
+            if (/\+/.test(dataType)) {
+              dataType = dataType.split('+')[1];
+            }
+
+            extractor = res[dataType] || res.text;
           }
           return [extractor(res), res];
         });
