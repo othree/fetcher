@@ -1,6 +1,9 @@
 
 import param from 'jquery-param';
 
+// https://github.com/jquery/jquery/blob/master/src/ajax.js#L20
+var rnoContent = /^(?:GET|HEAD)$/;
+
 // https://github.com/github/fetch/blob/master/fetch.js#L113
 var support = {
   blob: 'FileReader' in self && 'Blob' in self && (function() {
@@ -90,22 +93,20 @@ class Fetcher {
     }
 
     // set query parameter
-    if (options.method === 'GET') {
+    if (rnoContent.test(options.method)) {
       var urldata = this.param(data);
-      if (/\?/.test(url)) {
-        url = url + '?' + urldata;
-      } else {
-        url = url + '&' + urldata;
+      if (urldata) {
+        url = url + (/\?/.test(url) ? '?' : '&') + urldata;
       }
     }
 
     // set Content-Type header
-    if (options.method === 'POST' || options.method === 'PUT') {
+    if (!rnoContent.test(options.method)) {
       headers.set("Content-Type", normalizeContentType(headers.get('Content-Type')));
     }
 
     // set body
-    if (options.method === 'POST' || options.method === 'PUT') {
+    if (!rnoContent.test(options.method)) {
       if (typeof data === 'string'
        || (support.formdata && FormData.prototype.isPrototypeOf(data))
        || (support.blob && Blob.prototype.isPrototypeOf(data)) ) {
