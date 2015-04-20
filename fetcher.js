@@ -164,7 +164,11 @@
           if (typeof data === 'string' || support.formdata && FormData.prototype.isPrototypeOf(data) || support.blob && Blob.prototype.isPrototypeOf(data)) {
             options.body = data;
           } else {
-            options.body = this.param(data);
+            if (headers.get('Content-Type') === 'application/json') {
+              options.body = JSON.stringify(data);
+            } else {
+              options.body = this.param(data);
+            }
           }
         }
 
