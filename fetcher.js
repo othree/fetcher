@@ -22,7 +22,7 @@
   var _param2 = _interopRequire(_jqueryParam);
 
   // https://github.com/jquery/jquery/blob/master/src/ajax.js#L20
-  var rnoContent = /^(?:GET|HEAD)$/;
+  var rnoContent = /^(?:GET|HEAD|TRACE)$/;
 
   // https://github.com/github/fetch/blob/master/fetch.js#L113
   var support = {
@@ -186,12 +186,22 @@
         });
       }
     }, {
-      key: 'delete',
-      value: function _delete(url, data) {
+      key: 'options',
+      value: (function (_options) {
+        function options(_x2, _x3) {
+          return _options.apply(this, arguments);
+        }
+
+        options.toString = function () {
+          return _options.toString();
+        };
+
+        return options;
+      })(function (url, data) {
         var options = arguments[2] === undefined ? {} : arguments[2];
 
-        return this.request('DELETE', url, data, options);
-      }
+        return this.request('OPTIONS', url, data, options);
+      })
     }, {
       key: 'get',
       value: function get(url, data) {
@@ -215,23 +225,6 @@
         return this.request('HEAD', url, data, options);
       }
     }, {
-      key: 'options',
-      value: (function (_options) {
-        function options(_x2, _x3) {
-          return _options.apply(this, arguments);
-        }
-
-        options.toString = function () {
-          return _options.toString();
-        };
-
-        return options;
-      })(function (url, data) {
-        var options = arguments[2] === undefined ? {} : arguments[2];
-
-        return this.request('OPTIONS', url, data, options);
-      })
-    }, {
       key: 'post',
       value: function post(url, data) {
         var options = arguments[2] === undefined ? {} : arguments[2];
@@ -244,6 +237,27 @@
         var options = arguments[2] === undefined ? {} : arguments[2];
 
         return this.request('PUT', url, data, options);
+      }
+    }, {
+      key: 'delete',
+      value: function _delete(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
+        return this.request('DELETE', url, data, options);
+      }
+    }, {
+      key: 'trace',
+      value: function trace(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
+        return this.request('TRACE', url, data, options);
+      }
+    }, {
+      key: 'connect',
+      value: function connect(url, data) {
+        var options = arguments[2] === undefined ? {} : arguments[2];
+
+        return this.request('CONNECT', url, data, options);
       }
     }]);
 

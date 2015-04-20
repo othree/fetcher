@@ -140,14 +140,12 @@ class Fetcher {
     });
   }
 
-  delete(url, data, options = {}) {
-    return this.request('DELETE', url, data, options);
+  options(url, data, options = {}) {
+    return this.request('OPTIONS', url, data, options);
   }
-
   get(url, data, options = {}) {
     return this.request('GET', url, data, options);
   }
-
   getJSON(url, data, options = {}) {
     options.dataType = 'json'
     return this.get(url, data, options);
@@ -155,17 +153,20 @@ class Fetcher {
   head(url, data, options = {}) {
     return this.request('HEAD', url, data, options);
   }
-
-  options(url, data, options = {}) {
-    return this.request('OPTIONS', url, data, options);
-  }
-
   post(url, data, options = {}) {
     return this.request('POST', url, data, options);
   }
-
   put(url, data, options = {}) {
     return this.request('PUT', url, data, options);
+  }
+  delete(url, data, options = {}) {
+    return this.request('DELETE', url, data, options);
+  }
+  trace(url, data, options = {}) {
+    return this.request('TRACE', url, data, options);
+  }
+  connect(url, data, options = {}) {
+    return this.request('CONNECT', url, data, options);
   }
 };
 
