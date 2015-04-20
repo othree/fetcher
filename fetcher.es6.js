@@ -53,8 +53,8 @@ class Fetcher {
 
     if (options.method === 'POST') {
       var headers = options.headers || {};
-      headers["Content-type"] = headers["Content-type"] || 'application/x-www-form-urlencoded; charset=UTF-8';
-      headers["Content-type"] = shortContentType[headers["Content-type"]] || headers["Content-type"];
+      headers["Content-Type"] = headers["Content-Type"] || 'application/x-www-form-urlencoded; charset=UTF-8';
+      headers["Content-Type"] = shortContentType[headers["Content-Type"]] || headers["Content-Type"];
     }
 
     var responseValue = res[options.dataType] || res['text'];
