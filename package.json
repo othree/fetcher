@@ -16,13 +16,15 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "jquery-param": "0.0.2"
+    "jquery-param": "*"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
     "expect": "*",
-    "istanbul": "*"
+    "istanbul": "*",
+    "es6-promise": "*",
+    "whatwg-fetch ": "*"
   },
   "scripts": {
     "test": "mocha"
