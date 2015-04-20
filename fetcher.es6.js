@@ -23,12 +23,14 @@ var support = {
 
 var parseXML = res => {
   var xml;
+  var type = res.headers.get('Content-Type');
+  var mime = type ? type.split(';').unshift() : 'text/xml' ;
   var text = res.text();
   if (window) {
     // in browser
     // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
     try {
-      xml = ( new window.DOMParser() ).parseFromString( text, "text/xml" );
+      xml = ( new window.DOMParser() ).parseFromString( text, mime );
     } catch ( e ) {
       xml = undefined;
     }
