@@ -1,13 +1,15 @@
 require('mocha');
 
+var stream = require('stream');
 var should = require('should');
 var expect = require('expect');
 var sinon  = require('sinon');
 
-var Promise = require('es6-promise').Promise;
-var fetcher = require('../');
+global.Promise = require('es6-promise').Promise;
+global.fetcher = require('../');
 
 global.Headers = require('node-fetch/lib/headers');
+global.Response = require('node-fetch/lib/response');
 
 
 function once(fn) {
@@ -107,6 +109,34 @@ it("POST request without Content-Type", function () {
 
   var body = args[1].body;
   body.should.equal('abc=123&def=456');
+});
+
+it("Response JSON with dataType option", function () {
+  var body = new stream.PassThrough();
+  var callback = sinon.stub().returns(Promise.resolve(new Response(
+    body,
+    {
+      url: '/',
+      status: '200',
+      headers: (new Headers()),
+      size: 12,
+      timeout: 5000
+    } 
+  )));
+  global.fetch = once(callback);
+
+  v = fetch();
+  var res = fetcher.post('/', {abc: 123, def: 456}, {dataType: 'json'});
+
+  body.end('{"bcd":455}');
+
+  callback.called.should.be.true;
+
+  res.then(function (v) {
+    var value = v[0];
+    value.should.equal({bcd: 456});
+  });
+
 });
 
 /*
