@@ -68,7 +68,7 @@ var isCORS = url => {
 }
 
 var shortContentType = {
-  "*": '*/*',
+  "*":  '*/*',
   json: 'application/json',
   text: 'text/plain',
   xml:  'application/xml'
