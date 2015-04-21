@@ -35,8 +35,10 @@ it("GET request parameter", function () {
 
   var args = callback.getCall(0).args;
   var url = args[0];
+  var opt = args[1];
 
   url.should.equal('/?abc=123');
+  opt.method.should.equal('GET')
 });
 
 it("POST request parameter, use 'application/json'", function () {
@@ -51,10 +53,12 @@ it("POST request parameter, use 'application/json'", function () {
 
   var args = callback.getCall(0).args;
   var url = args[0];
+  var opt = args[1];
   url.should.equal('/');
 
   var body = args[1].body;
   body.should.equal('{"abc":123}');
+  opt.method.should.equal('POST')
 });
 
 it("POST request parameter, use 'json'", function () {
@@ -109,6 +113,26 @@ it("POST request without Content-Type", function () {
 
   var body = args[1].body;
   body.should.equal('abc=123&def=456');
+});
+
+it("PUT request without Content-Type", function () {
+  var callback = sinon.stub().returns(new Promise(function (resolver) {
+    resolve('{"bcd": 234}');
+  }));
+  global.fetch = once(callback);
+
+  fetcher.put('/', {abc: 123, def: 456});
+
+  callback.called.should.be.true;
+
+  var args = callback.getCall(0).args;
+  var url = args[0];
+  var opt = args[1];
+  url.should.equal('/');
+
+  var body = args[1].body;
+  body.should.equal('abc=123&def=456');
+  opt.method.should.equal('PUT')
 });
 
 it("Response JSON with dataType option", function () {
