@@ -1,6 +1,6 @@
 {
   "name": "fetch-er",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "WHATWG fetch helper",
   "homepage": "https://github.com/othree/fetcher",
   "author": {
@@ -11,6 +11,7 @@
     "type": "git",
     "url": "https://github.com/othree/fetcher.git"
   },
+  "browser": "dist/fetcher.js",
   "main": "fetcher.js",
   "engines": {
     "node": ">=0.8.0"
