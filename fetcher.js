@@ -11,8 +11,6 @@
     global.fetcher = mod.exports;
   }
 })(this, function (exports, module, _jqueryParam) {
-  'use strict';
-
   var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
 
   var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
@@ -21,9 +19,7 @@
 
   var _param2 = _interopRequire(_jqueryParam);
 
-  if (typeof global !== 'undefined') {
-    var self = global;
-  }
+  var self = global || this;
 
   // https://github.com/jquery/jquery/blob/master/src/ajax.js#L20
   var rnoContent = /^(?:GET|HEAD)$/;
