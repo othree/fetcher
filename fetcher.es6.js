@@ -97,8 +97,8 @@ class Fetcher {
     options.headers = headers;
 
     // auto set to cors if hotname is different
-    if (!options.mode) {
-      options.mode = isCORS(url) ? 'cors' : 'no-cors';
+    if (!options.mode && isCORS(url)) {
+      options.mode = 'cors';
     }
 
     // set query parameter
@@ -144,7 +144,7 @@ class Fetcher {
 
     return fetch(url, options).then( res => {
       if (!extractor) {
-        var mimeType = res.headers.get('Content-Type').split(';').unshift();
+        var mimeType = res.headers.get('Content-Type').split(';').shift();
         var dataType = mimeType.split(/[\/+]/).pop();
 
         extractor = resTractors[dataType] || resTractors['text'];
