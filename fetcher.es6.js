@@ -1,8 +1,7 @@
 
 var self = this;
-if (typeof global !== 'undefined') {
-  self = global;
-}
+if (typeof global !== 'undefined') { self = global; }
+if (typeof window !== 'undefined') { self = window; }
 
 import param from 'jquery-param';
 
