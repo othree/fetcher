@@ -136,10 +136,35 @@ it("Response JSON with dataType option", function () {
   r.should.be.fulfilledWith([data, res]);
 });
 
+it("Response JSON with Content-Type", function () {
+  var data = {bcd: 456};
+  var body = new stream.PassThrough();
+  var res = new Response(
+    body,
+    {
+      url: '/',
+      status: '200',
+      headers: (new Headers({
+        "Content-Type": 'application/json'
+      })),
+      size: 12,
+      timeout: 5000
+    } 
+  );
+  var callback = sinon.stub().returns(Promise.resolve(res));
+  global.fetch = once(callback);
+
+  var r = fetcher.post('/', {abc: 123, def: 456});
+
+  body.end(JSON.stringify(data));
+
+  callback.called.should.be.true;
+
+  r.should.be.fulfilledWith([data, res]);
+});
+
 /*
  * Cases
- * response json, known by dataType option
- * response json, known by content-type header
  * response text
  * response form-data encoded string
  */
