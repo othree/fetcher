@@ -8,8 +8,8 @@ Developers have to deal with some detail. ex: Post parameter serialize, transfor
 So here is the fetch-er to help you deal with these stuff. Inspired by jQuery.ajax.
 
 
-Sample
-------
+Example
+-------
 
     fetcher.get('/api/users', null, {dataType: 'json'}).then( ([value, res]) => {
       //...
@@ -54,4 +54,5 @@ Fetcher methods will return a Promise just like fetch. But it will be fulfilled 
 array(`[value, response]`). First element is the response value. Second element is consumed response object.
 The reason to use array is that, array form is easier to use ES6 destructor assign.
 
-
+There is one more method called `request`. Is the base of all other methods. Receive four arguments: `method`,
+`url`, `data` and `options`. The method is in string format. All uppercase characters.
