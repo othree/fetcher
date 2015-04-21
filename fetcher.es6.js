@@ -1,5 +1,8 @@
 
-var self = global || this;
+var self = this;
+if (typeof global !== 'undefined') {
+  self = global;
+}
 
 import param from 'jquery-param';
 

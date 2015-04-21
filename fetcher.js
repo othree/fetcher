@@ -19,7 +19,10 @@
 
   var _param2 = _interopRequire(_jqueryParam);
 
-  var self = global || this;
+  var self = this;
+  if (typeof global !== 'undefined') {
+    self = global;
+  }
 
   // https://github.com/jquery/jquery/blob/master/src/ajax.js#L20
   var rnoContent = /^(?:GET|HEAD)$/;
