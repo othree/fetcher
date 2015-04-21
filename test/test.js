@@ -1,7 +1,7 @@
 require('mocha');
 
 var stream = require('stream');
-var should = require('should');
+var should = require('should-promised');
 var expect = require('expect');
 var sinon  = require('sinon');
 
@@ -112,8 +112,9 @@ it("POST request without Content-Type", function () {
 });
 
 it("Response JSON with dataType option", function () {
+  var data = {bcd: 456};
   var body = new stream.PassThrough();
-  var callback = sinon.stub().returns(Promise.resolve(new Response(
+  var res = new Response(
     body,
     {
       url: '/',
@@ -122,21 +123,17 @@ it("Response JSON with dataType option", function () {
       size: 12,
       timeout: 5000
     } 
-  )));
+  );
+  var callback = sinon.stub().returns(Promise.resolve(res));
   global.fetch = once(callback);
 
-  v = fetch();
-  var res = fetcher.post('/', {abc: 123, def: 456}, {dataType: 'json'});
+  var r = fetcher.post('/', {abc: 123, def: 456}, {dataType: 'json'});
 
-  body.end('{"bcd":455}');
+  body.end(JSON.stringify(data));
 
   callback.called.should.be.true;
 
-  res.then(function (v) {
-    var value = v[0];
-    value.should.equal({bcd: 456});
-  });
-
+  r.should.be.fulfilledWith([data, res]);
 });
 
 /*

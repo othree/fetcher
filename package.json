@@ -19,13 +19,14 @@
     "jquery-param": "*"
   },
   "devDependencies": {
-    "mocha": "*",
-    "sinon": "*",
-    "should": "*",
+    "es6-promise": "*",
     "expect": "*",
     "istanbul": "*",
-    "es6-promise": "*",
-    "node-fetch": "*"
+    "mocha": "*",
+    "node-fetch": "*",
+    "should": "*",
+    "should-promised": "^0.2.1",
+    "sinon": "*"
   },
   "scripts": {
     "test": "mocha"
