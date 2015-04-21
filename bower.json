@@ -1,0 +1,24 @@
+{
+  "name": "fetch-er",
+  "main": "dist/fetcher.js",
+  "version": "0.0.7",
+  "homepage": "https://github.com/othree/fetcher",
+  "authors": [
+    "othree <othree@gmail.com>"
+  ],
+  "description": "WHATWG fetch helper, inspired by jQuery.ajax",
+  "keywords": [
+    "fetch"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    "package.json",
+    "test/",
+    "fetcher.es6.js",
+    "fetcher.js",
+    "param.js",
+    "Makefile",
+    "*.md"
+  ]
+}
