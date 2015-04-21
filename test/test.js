@@ -37,7 +37,7 @@ it("GET request parameter", function () {
   url.should.equal('/?abc=123');
 });
 
-it("POST request parameter", function () {
+it("POST request parameter, use 'application/json'", function () {
   var callback = sinon.stub().returns(new Promise(function (resolver) {
     resolve('{"bcd": 234}');
   }));
@@ -55,12 +55,62 @@ it("POST request parameter", function () {
   body.should.equal('{"abc":123}');
 });
 
+it("POST request parameter, use 'json'", function () {
+  var callback = sinon.stub().returns(new Promise(function (resolver) {
+    resolve('{"bcd": 234}');
+  }));
+  global.fetch = once(callback);
+
+  fetcher.post('/', {abc: 123}, {headers: {"Content-Type": "json"}});
+
+  callback.called.should.be.true;
+
+  var args = callback.getCall(0).args;
+  var url = args[0];
+  url.should.equal('/');
+
+  var body = args[1].body;
+  body.should.equal('{"abc":123}');
+});
+
+it("POST request parameter, use json string", function () {
+  var callback = sinon.stub().returns(new Promise(function (resolver) {
+    resolve('{"bcd": 234}');
+  }));
+  global.fetch = once(callback);
+
+  fetcher.post('/', JSON.stringify({abc: 123}), {headers: {"Content-Type": "application/json"}});
+
+  callback.called.should.be.true;
+
+  var args = callback.getCall(0).args;
+  var url = args[0];
+  url.should.equal('/');
+
+  var body = args[1].body;
+  body.should.equal('{"abc":123}');
+});
+
+it("POST request without Content-Type", function () {
+  var callback = sinon.stub().returns(new Promise(function (resolver) {
+    resolve('{"bcd": 234}');
+  }));
+  global.fetch = once(callback);
+
+  fetcher.post('/', {abc: 123, def: 456});
+
+  callback.called.should.be.true;
+
+  var args = callback.getCall(0).args;
+  var url = args[0];
+  url.should.equal('/');
+
+  var body = args[1].body;
+  body.should.equal('abc=123&def=456');
+});
+
 /*
  * Cases
- * post without content-type
- * post data with content-type: json, application/json
- * post json string with content-type
- * simple content-type test
  * response json, known by dataType option
  * response json, known by content-type header
  * response text
