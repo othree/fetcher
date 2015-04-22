@@ -145,6 +145,9 @@ class Fetcher {
     headers.set('Accept', accept);
 
     return fetch(url, options).then( res => {
+      if (!res.ok && res.status !== 304) {
+        return Promise.reject([res.statusText, res]);
+      }
       if (!extractor) {
         var mimeType = res.headers.get('Content-Type').split(';').shift();
         var dataType = mimeType.split(/[\/+]/).pop();
