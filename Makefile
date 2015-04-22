@@ -4,7 +4,7 @@ all: param.js fetcher.js
 param.js:
 	cat node_modules/jquery-param/src/jquery-param.js | dos2unix > param.js
 
-fetcher.js:
+fetcher.js: fetcher.es6.js
 	babel --modules umd --module-id fetcher fetcher.es6.js > fetcher.js
 
 node_modules/jquery-param/src/jquery-param.js:
