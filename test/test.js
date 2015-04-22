@@ -187,8 +187,32 @@ it("Response JSON with Content-Type", function () {
   r.should.be.fulfilledWith([data, res]);
 });
 
+it("Response text without Content-Type", function () {
+  var data = {bcd: 456};
+  var body = new stream.PassThrough();
+  var res = new Response(
+    body,
+    {
+      url: '/',
+      status: '200',
+      headers: (new Headers({})),
+      size: 12,
+      timeout: 5000
+    } 
+  );
+  var callback = sinon.stub().returns(Promise.resolve(res));
+  global.fetch = once(callback);
+
+  var r = fetcher.post('/', {abc: 123, def: 456});
+
+  body.end(JSON.stringify(data));
+
+  callback.called.should.be.true;
+
+  r.should.be.fulfilledWith([JSON.stringify(data), res]);
+});
+
 /*
  * Cases
  * response text
- * response form-data encoded string
  */
