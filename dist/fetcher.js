@@ -102,11 +102,11 @@
     var type = res.headers.get('Content-Type');
     var mime = type ? type.split(';').unshift() : 'text/xml';
     var text = res.text();
-    if (window) {
+    if (self) {
       // in browser
       // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
       try {
-        xml = new window.DOMParser().parseFromString(text, mime);
+        xml = new self.DOMParser().parseFromString(text, mime);
       } catch (e) {
         xml = undefined;
       }
@@ -202,15 +202,15 @@
           options.mode = 'cors';
         }
 
-        // set query parameter
         if (rnoContent.test(options.method)) {
+          // set query parameter got GET/HEAD
           var query = this.param(data);
           if (query) {
             url = url + (/\?/.test(url) ? '&' : '?') + query;
           }
-        }
+        } else {
+          // Other method will have request body
 
-        if (!rnoContent.test(options.method)) {
           // grab and delete Content-Type header
           // fetch will set Content-Type for common cases
           var contentType = normalizeContentType(headers.get('Content-Type'));
@@ -226,6 +226,7 @@
             headers.set('Content-Type', contentType);
             options.body = JSON.stringify(data);
           } else if (data) {
+            // x-www-form-urlencoded is default in fetch
             options.body = this.param(data);
           }
         }
@@ -240,6 +241,8 @@
             extractor = resTractors[dataType];
           }
         }
+
+        delete options.dataType;
 
         headers.set('Accept', accept);
 
