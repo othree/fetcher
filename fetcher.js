@@ -194,7 +194,22 @@
 
         headers.set('Accept', accept);
 
-        return fetch(url, options).then(function (res) {
+        var racers = [];
+        if (options.timeout) {
+          if (typeof options.timeout === 'number') {
+            racers.push(new Promise(function (resolve, reject) {
+              setTimeout(function () {
+                reject(['Timeout abort.']);
+              }, options.timeout);
+            }));
+          }
+          delete options.timeout;
+        }
+
+        racers.push(fetch(url, options).then(function (res) {
+          if (!res.ok && res.status !== 304) {
+            return Promise.reject([res.statusText, res]);
+          }
           if (!extractor) {
             var mimeType = res.headers.get('Content-Type').split(';').shift();
             var dataType = mimeType.split(/[\/+]/).pop();
@@ -202,7 +217,9 @@
             extractor = resTractors[dataType] || resTractors.text;
           }
           return Promise.all([extractor(res), res]);
-        });
+        }));
+
+        return Promise.race(racers);
       }
     }, {
       key: 'delete',

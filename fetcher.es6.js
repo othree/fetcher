@@ -144,7 +144,19 @@ class Fetcher {
 
     headers.set('Accept', accept);
 
-    return fetch(url, options).then( res => {
+    var racers = []
+    if (options.timeout) {
+      if (typeof options.timeout === 'number') {
+        racers.push(new Promise(function (resolve, reject) {
+          setTimeout(function () {
+            reject(['Timeout abort.'])
+          }, options.timeout);
+        }));
+      }
+      delete options.timeout;
+    }
+
+    racers.push(fetch(url, options).then( res => {
       if (!res.ok && res.status !== 304) {
         return Promise.reject([res.statusText, res]);
       }
@@ -155,7 +167,9 @@ class Fetcher {
         extractor = resTractors[dataType] || resTractors['text'];
       }
       return Promise.all([extractor(res), res]);
-    });
+    }));
+
+    return Promise.race(racers);
   }
 
   delete(url, data, options = {}) {
