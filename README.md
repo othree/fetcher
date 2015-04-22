@@ -3,10 +3,12 @@ fetch-er
 
 [![Build Status](https://travis-ci.org/othree/fetcher.svg?branch=master)](https://travis-ci.org/othree/fetcher)
 
-A WHATWG fetch helper. WHATWG's fetch is very modern. Simple name, uses Promise, options object. But it designed as a low level API.
+A WHATWG [fetch][] helper. WHATWG's fetch is very modern. Simple name, uses Promise, options object. But it designed as a low level API.
 Developers have to deal with some detail. ex: Post parameter serialize, transform response JSON to JavaScript object.
 So here is the fetch-er to help you deal with these stuff. Inspired by jQuery.ajax.
 
+
+[fetch]:http://updates.html5rocks.com/2015/03/introduction-to-fetch
 
 Example
 -------
