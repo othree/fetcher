@@ -157,16 +157,28 @@ class Fetcher {
     }
 
     racers.push(fetch(url, options).then( res => {
+      var statusText = res.statusText;
       if (!res.ok && res.status !== 304) {
-        return Promise.reject([res.statusText, res]);
+        return Promise.reject([statusText, res]);
       }
+
+      if ( res.status === 204 || options.method === "HEAD" ) {
+        // if no content
+        statusText = "nocontent";
+      } else if ( status === 304 ) {
+        // if not modified
+        statusText = "notmodified";
+      } else {
+        statusText = "success";
+      }
+      
       if (!extractor) {
         var mimeType = res.headers.get('Content-Type').split(';').shift();
         var dataType = mimeType.split(/[\/+]/).pop();
 
         extractor = resTractors[dataType] || resTractors['text'];
       }
-      return Promise.all([extractor(res), res]);
+      return Promise.all([extractor(res), statusText, res]);
     }));
 
     return Promise.race(racers);
