@@ -144,7 +144,7 @@ class Fetcher {
 
     headers.set('Accept', accept);
 
-    var racers = []
+    var racers = [];
     if (options.timeout) {
       if (typeof options.timeout === 'number') {
         racers.push(new Promise(function (resolve, reject) {
