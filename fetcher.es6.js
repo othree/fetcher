@@ -94,6 +94,9 @@ class Fetcher {
   request(method, url, data, options = {}) {
     options.method = method.toUpperCase();
 
+    if (options.headers && options.headers["Content-Type"]) {
+      options.headers["Content-Type"] = normalizeContentType(options.headers["Content-Type"]);
+    }
     var headers = new Headers(options.headers || {});
     options.headers = headers;
 
@@ -113,7 +116,7 @@ class Fetcher {
 
       // grab and delete Content-Type header
       // fetch will set Content-Type for common cases
-      var contentType = normalizeContentType(headers.get('Content-Type'));
+      var contentType = headers.get('Content-Type');
       headers.delete("Content-Type");
 
       // set body
