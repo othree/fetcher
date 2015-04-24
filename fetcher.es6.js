@@ -193,26 +193,26 @@ class Fetcher {
     return Promise.race(racers);
   }
 
-  delete(url, data, options = {}) {
+  delete(url, data, options) {
     return this.request('DELETE', url, data, options);
   }
-  get(url, data, options = {}) {
+  get(url, data, options) {
     return this.request('GET', url, data, options);
   }
   getJSON(url, data, options = {}) {
     options.dataType = 'json'
     return this.get(url, data, options);
   }
-  head(url, data, options = {}) {
+  head(url, data, options) {
     return this.request('HEAD', url, data, options);
   }
-  options(url, data, options = {}) {
+  options(url, data, options) {
     return this.request('OPTIONS', url, data, options);
   }
-  post(url, data, options = {}) {
+  post(url, data, options) {
     return this.request('POST', url, data, options);
   }
-  put(url, data, options = {}) {
+  put(url, data, options) {
     return this.request('PUT', url, data, options);
   }
 };
