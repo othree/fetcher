@@ -10,7 +10,7 @@ var rnoContent = /^(?:GET|HEAD)$/;
 
 // https://github.com/github/fetch/blob/master/fetch.js#L113
 var support = {
-  blob: 'FileReader' in self && 'Blob' in self && (function() {
+  blob: 'FileReader' in self && 'Blob' in self && ( () => {
     try {
       new Blob();
       return true
