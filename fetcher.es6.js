@@ -154,7 +154,7 @@ class Fetcher {
       if (typeof options.timeout === 'number') {
         racers.push(new Promise(function (resolve, reject) {
           setTimeout(function () {
-            reject(new Error('timeout'))
+            reject([new Error('timeout')])
           }, options.timeout);
         }));
       }
@@ -179,11 +179,13 @@ class Fetcher {
       
       if (!extractor) {
         mimeType = mimeType || res.headers.get('Content-Type').split(';').shift();
-        var dataType = mimeType.split(/[\/+]/).pop();
+        dataType = mimeType.split(/[\/+]/).pop();
 
         extractor = resTractors[dataType] || resTractors['text'];
       }
       return Promise.all([extractor(res), statusText, res]);
+    }, error => {
+      throw [error];
     }));
 
     return Promise.race(racers);
