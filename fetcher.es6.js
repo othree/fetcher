@@ -48,7 +48,7 @@ var resTractors = {
   arrayBuffer: res => res.arrayBuffer(),
   blob:        res => res.blob(),
   formData:    res => res.formData(),
-  html:        parseXML,
+  html:        res => res.text(),
   json:        res => res.json(),
   plain:       res => res.text(),
   text:        res => res.text(),
