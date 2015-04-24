@@ -44,14 +44,16 @@ var parseXML = res => {
   return Promise.resolve(xml);
 }
 
+var resText = res => res.text()
+
 var resTractors = {
   arrayBuffer: res => res.arrayBuffer(),
   blob:        res => res.blob(),
   formData:    res => res.formData(),
-  html:        res => res.text(),
+  html:        resText,
   json:        res => res.json(),
-  plain:       res => res.text(),
-  text:        res => res.text(),
+  plain:       resText,
+  text:        resText,
   xml:         parseXML
 };
 
