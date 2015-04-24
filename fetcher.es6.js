@@ -47,9 +47,9 @@ var parseXML = (res, mimeType) => {
 var resText = res => res.text()
 
 var resTractors = {
-  arrayBuffer: res => res.arrayBuffer(),
+  arraybuffer: res => res.arrayBuffer(),
   blob:        res => res.blob(),
-  formData:    res => res.formData(),
+  formdata:    res => res.formData(),
   html:        resText,
   json:        res => res.json(),
   plain:       resText,
@@ -141,7 +141,7 @@ class Fetcher {
       accept = shortContentType[dataType];
       if (dataType !== '*') {
         accept += ', ' + shortContentType['*'] + '; q=0.01';
-        extractor = resTractors[dataType];
+        extractor = resTractors[dataType.toLowerCase()];
       }
     }
 
@@ -183,7 +183,7 @@ class Fetcher {
       mimeType = mimeType || res.headers.get('Content-Type').split(';').shift();
       if (!extractor) {
         dataType = mimeType.split(/[\/+]/).pop();
-        extractor = resTractors[dataType] || resTractors['text'];
+        extractor = resTractors[dataType.toLowerCase()] || resTractors['text'];
       }
       return Promise.all([extractor(res, mimeType), statusText, res]);
     }, error => {
