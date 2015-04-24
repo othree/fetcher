@@ -90,7 +90,7 @@ class Fetcher {
   }
 
   request(method, url, data, options = {}) {
-    options.method = method;
+    options.method = method.toUpperCase();
 
     var headers = new Headers(options.headers || {});
     options.headers = headers;
