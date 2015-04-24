@@ -62,9 +62,7 @@ var isCORS = url => {
     var frags = url.replace(/^\w+:\/\//, '');
     var index = url.indexOf('/');
     var hostname = frags.substr(0, index);
-    if (hostname !== self.document.location.hostname) {
-      return true;
-    }
+    return hostname !== self.document.location.hostname;
   }
   return false;
 }
