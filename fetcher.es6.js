@@ -142,7 +142,10 @@ class Fetcher {
       }
     }
 
+    var mimeType = options.mimeType.trim();
+
     delete options.dataType;
+    delete options.mimeType;
 
     headers.set('Accept', accept);
 
@@ -175,7 +178,7 @@ class Fetcher {
       }
       
       if (!extractor) {
-        var mimeType = res.headers.get('Content-Type').split(';').shift();
+        mimeType = mimeType || res.headers.get('Content-Type').split(';').shift();
         var dataType = mimeType.split(/[\/+]/).pop();
 
         extractor = resTractors[dataType] || resTractors['text'];
