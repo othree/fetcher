@@ -21,9 +21,9 @@ var support = {
   formData: 'FormData' in self
 };
 
-var parseXML = res => {
+var parseXML = (res, mimeType) => {
   var xml;
-  var type = res.headers.get('Content-Type');
+  var type = mimeType;
   var mime = type ? type.split(';').unshift() : 'text/xml' ;
   var text = res.text();
   if (self) {
@@ -177,13 +177,12 @@ class Fetcher {
         statusText = "success";
       }
       
+      mimeType = mimeType || res.headers.get('Content-Type').split(';').shift();
       if (!extractor) {
-        mimeType = mimeType || res.headers.get('Content-Type').split(';').shift();
         dataType = mimeType.split(/[\/+]/).pop();
-
         extractor = resTractors[dataType] || resTractors['text'];
       }
-      return Promise.all([extractor(res), statusText, res]);
+      return Promise.all([extractor(res, mimeType), statusText, res]);
     }, error => {
       throw [error];
     }));
