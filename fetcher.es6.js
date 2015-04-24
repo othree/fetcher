@@ -76,10 +76,7 @@ var shortContentType = {
   xml:  'application/xml'
 }
 
-var normalizeContentType = (contentType) => {
-  var normalized = shortContentType[contentType];
-  return normalized || contentType;
-}
+var normalizeContentType = contentType => shortContentType[contentType] || contentType;
   
 
 
