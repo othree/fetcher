@@ -45,9 +45,9 @@
     formData: 'FormData' in self
   };
 
-  var parseXML = function parseXML(res) {
+  var parseXML = function parseXML(res, mimeType) {
     var xml;
-    var type = res.headers.get('Content-Type');
+    var type = mimeType;
     var mime = type ? type.split(';').unshift() : 'text/xml';
     var text = res.text();
     if (self) {
@@ -68,26 +68,26 @@
     return Promise.resolve(xml);
   };
 
+  var resText = function resText(res) {
+    return res.text();
+  };
+
   var resTractors = {
-    arrayBuffer: function arrayBuffer(res) {
+    arraybuffer: function arraybuffer(res) {
       return res.arrayBuffer();
     },
     blob: function blob(res) {
       return res.blob();
     },
-    formData: function formData(res) {
+    formdata: function formdata(res) {
       return res.formData();
     },
-    html: parseXML,
+    html: resText,
     json: function json(res) {
       return res.json();
     },
-    plain: function plain(res) {
-      return res.text();
-    },
-    text: function text(res) {
-      return res.text();
-    },
+    plain: resText,
+    text: resText,
     xml: parseXML
   };
 
@@ -96,9 +96,7 @@
       var frags = url.replace(/^\w+:\/\//, '');
       var index = url.indexOf('/');
       var hostname = frags.substr(0, index);
-      if (hostname !== self.document.location.hostname) {
-        return true;
-      }
+      return hostname !== self.document.location.hostname;
     }
     return false;
   };
@@ -111,8 +109,7 @@
   };
 
   var normalizeContentType = function normalizeContentType(contentType) {
-    var normalized = shortContentType[contentType];
-    return normalized || contentType;
+    return shortContentType[contentType] || contentType;
   };
 
   var Fetcher = (function () {
@@ -140,8 +137,11 @@
       value: function request(method, url, data) {
         var options = arguments[3] === undefined ? {} : arguments[3];
 
-        options.method = method;
+        options.method = method.toUpperCase();
 
+        if (options.headers && options.headers['Content-Type']) {
+          options.headers['Content-Type'] = normalizeContentType(options.headers['Content-Type']);
+        }
         var headers = new Headers(options.headers || {});
         options.headers = headers;
 
@@ -161,7 +161,7 @@
 
           // grab and delete Content-Type header
           // fetch will set Content-Type for common cases
-          var contentType = normalizeContentType(headers.get('Content-Type'));
+          var contentType = headers.get('Content-Type');
           headers['delete']('Content-Type');
 
           // set body
@@ -186,11 +186,16 @@
           accept = shortContentType[dataType];
           if (dataType !== '*') {
             accept += ', ' + shortContentType['*'] + '; q=0.01';
-            extractor = resTractors[dataType];
+            extractor = resTractors[dataType.toLowerCase()];
           }
         }
 
+        if (options.mimeType) {
+          var mimeType = options.mimeType.trim();
+        }
+
         delete options.dataType;
+        delete options.mimeType;
 
         headers.set('Accept', accept);
 
@@ -199,7 +204,7 @@
           if (typeof options.timeout === 'number') {
             racers.push(new Promise(function (resolve, reject) {
               setTimeout(function () {
-                reject(['Timeout abort.']);
+                reject([new Error('timeout')]);
               }, options.timeout);
             }));
           }
@@ -207,32 +212,42 @@
         }
 
         racers.push(fetch(url, options).then(function (res) {
+          var statusText = res.statusText;
           if (!res.ok && res.status !== 304) {
-            return Promise.reject([res.statusText, res]);
+            return Promise.reject([statusText, res]);
           }
-          if (!extractor) {
-            var mimeType = res.headers.get('Content-Type').split(';').shift();
-            var dataType = mimeType.split(/[\/+]/).pop();
 
-            extractor = resTractors[dataType] || resTractors.text;
+          if (res.status === 204 || options.method === 'HEAD') {
+            // if no content
+            statusText = 'nocontent';
+          } else if (res.status === 304) {
+            // if not modified
+            statusText = 'notmodified';
+          } else {
+            statusText = 'success';
           }
-          return Promise.all([extractor(res), res]);
+
+          var contentType = res.headers.get('Content-Type') || '';
+          mimeType = mimeType || contentType.split(';').shift();
+          if (!extractor) {
+            dataType = mimeType.split(/[\/+]/).pop();
+            extractor = resTractors[dataType.toLowerCase()] || resTractors.text;
+          }
+          return Promise.all([extractor(res, mimeType), statusText, res]);
+        }, function (error) {
+          throw [error];
         }));
 
         return Promise.race(racers);
       }
     }, {
       key: 'delete',
-      value: function _delete(url, data) {
-        var options = arguments[2] === undefined ? {} : arguments[2];
-
+      value: function _delete(url, data, options) {
         return this.request('DELETE', url, data, options);
       }
     }, {
       key: 'get',
-      value: function get(url, data) {
-        var options = arguments[2] === undefined ? {} : arguments[2];
-
+      value: function get(url, data, options) {
         return this.request('GET', url, data, options);
       }
     }, {
@@ -245,15 +260,13 @@
       }
     }, {
       key: 'head',
-      value: function head(url, data) {
-        var options = arguments[2] === undefined ? {} : arguments[2];
-
+      value: function head(url, data, options) {
         return this.request('HEAD', url, data, options);
       }
     }, {
       key: 'options',
       value: (function (_options) {
-        function options(_x2, _x3) {
+        function options(_x2, _x3, _x4) {
           return _options.apply(this, arguments);
         }
 
@@ -262,23 +275,17 @@
         };
 
         return options;
-      })(function (url, data) {
-        var options = arguments[2] === undefined ? {} : arguments[2];
-
+      })(function (url, data, options) {
         return this.request('OPTIONS', url, data, options);
       })
     }, {
       key: 'post',
-      value: function post(url, data) {
-        var options = arguments[2] === undefined ? {} : arguments[2];
-
+      value: function post(url, data, options) {
         return this.request('POST', url, data, options);
       }
     }, {
       key: 'put',
-      value: function put(url, data) {
-        var options = arguments[2] === undefined ? {} : arguments[2];
-
+      value: function put(url, data, options) {
         return this.request('PUT', url, data, options);
       }
     }]);

@@ -140,7 +140,9 @@ class Fetcher {
       }
     }
 
-    var mimeType = options.mimeType.trim();
+    if (options.mimeType) {
+      var mimeType = options.mimeType.trim();
+    }
 
     delete options.dataType;
     delete options.mimeType;
@@ -168,14 +170,15 @@ class Fetcher {
       if ( res.status === 204 || options.method === "HEAD" ) {
         // if no content
         statusText = "nocontent";
-      } else if ( status === 304 ) {
+      } else if ( res.status === 304 ) {
         // if not modified
         statusText = "notmodified";
       } else {
         statusText = "success";
       }
       
-      mimeType = mimeType || res.headers.get('Content-Type').split(';').shift();
+      var contentType = res.headers.get('Content-Type') || '';
+      mimeType = mimeType || contentType.split(';').shift();
       if (!extractor) {
         dataType = mimeType.split(/[\/+]/).pop();
         extractor = resTractors[dataType.toLowerCase()] || resTractors['text'];
