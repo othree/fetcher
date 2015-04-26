@@ -1,7 +1,7 @@
 require('mocha');
+require('should-promised');
 
 var stream = require('stream');
-var should = require('should-promised');
 var expect = require('expect');
 var sinon  = require('sinon');
 
@@ -22,6 +22,8 @@ function once(fn) {
     return returnValue;
   };
 }
+
+describe('Domain Model', function() {
 
 it("GET request parameter", function () {
   var callback = sinon.stub().returns(new Promise(function (resolver) {
@@ -135,14 +137,15 @@ it("PUT request without Content-Type", function () {
   opt.method.should.equal('PUT')
 });
 
-it("Response JSON with dataType option", function () {
+it("Response JSON with dataType option", function (done) {
   var data = {bcd: 456};
   var body = new stream.PassThrough();
+  body.end(JSON.stringify(data));
   var res = new Response(
     body,
     {
       url: '/',
-      status: '200',
+      status: 200,
       headers: (new Headers()),
       size: 12,
       timeout: 5000
@@ -153,21 +156,23 @@ it("Response JSON with dataType option", function () {
 
   var r = fetcher.post('/', {abc: 123, def: 456}, {dataType: 'json'});
 
-  body.end(JSON.stringify(data));
 
   callback.called.should.be.true;
 
-  r.should.be.fulfilledWith([data, res]);
+  r.then(function (v) {
+    v[0]['bcd'].should.equal(456);
+    done();
+  });
 });
 
-it("Response JSON with Content-Type", function () {
+it("Response JSON with Content-Type", function (done) {
   var data = {bcd: 456};
   var body = new stream.PassThrough();
   var res = new Response(
     body,
     {
       url: '/',
-      status: '200',
+      status: 200,
       headers: (new Headers({
         "Content-Type": 'application/json'
       })),
@@ -175,7 +180,7 @@ it("Response JSON with Content-Type", function () {
       timeout: 5000
     } 
   );
-  var callback = sinon.stub().returns(Promise.resolve(res));
+  var callback = sinon.stub().returns(new Promise(function (resolve) {resolve(res)}));
   global.fetch = once(callback);
 
   var r = fetcher.post('/', {abc: 123, def: 456});
@@ -184,17 +189,20 @@ it("Response JSON with Content-Type", function () {
 
   callback.called.should.be.true;
 
-  r.should.be.fulfilledWith([data, res]);
+  r.then(function (v) {
+    v[0]['bcd'].should.equal(456);
+    done();
+  });
 });
 
-it("Response text without Content-Type", function () {
+it("Response text without Content-Type", function (done) {
   var data = {bcd: 456};
   var body = new stream.PassThrough();
   var res = new Response(
     body,
     {
       url: '/',
-      status: '200',
+      status: 200,
       headers: (new Headers({})),
       size: 12,
       timeout: 5000
@@ -209,7 +217,27 @@ it("Response text without Content-Type", function () {
 
   callback.called.should.be.true;
 
-  r.should.be.fulfilledWith([JSON.stringify(data), res]);
+  r.then(function (v) {
+    v[0].should.equal(JSON.stringify(data));
+    done();
+  });
+});
+
+it("Timeout", function (done) {
+  var data = {bcd: 456};
+  var callback = sinon.stub().returns((new Promise(function () {})));
+  global.fetch = once(callback);
+
+  var r = fetcher.post('/timeout', {abc: 123, def: 456}, {timeout: 1000});
+
+  callback.called.should.be.true;
+
+  r.then(null, function (err) {
+    // err[0].should.equal([]);
+    done();
+  });
+});
+
 });
 
 /*
