@@ -233,7 +233,7 @@ it("Timeout", function (done) {
   callback.called.should.be.true;
 
   r.then(null, function (err) {
-    // err[0].should.equal([]);
+    err[0].toString().should.equal('Error: timeout');
     done();
   });
 });
