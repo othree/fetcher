@@ -111,7 +111,7 @@ class Fetcher {
 
       // grab and delete Content-Type header
       // fetch will set Content-Type for common cases
-      var contentType = headers.get('Content-Type');
+      var contentType = options.contentType || headers.get('Content-Type');
       headers.delete("Content-Type");
 
       // set body
