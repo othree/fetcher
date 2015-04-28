@@ -45,6 +45,9 @@ The options object will send to `fetch` and fetcher provides new options:
 
 * `dataType`: The data type you expect to receive from server. Supports mime type or the following shorcut
   `json`, `text` and `xml`.
+* `mimeType`: Will overwrite response mimeType before parse to data.
+* `timeout`: Will reject returned promise when time limit reach, but no actual abort now(current fetch don't have abort).
+
 
 What fetcher will do is:
 
@@ -54,8 +57,14 @@ What fetcher will do is:
 `options.dataType`.
 
 Fetcher methods will return a Promise just like fetch. But it will be fulfilled with different value, an 
-array(`[value, response]`). First element is the response value. Second element is consumed response object.
-The reason to use array is that, array form is easier to use ES6 destructor assign.
+array(`[value, status, response]`). First element is the response value. Second element is text response status.
+Possible values: `nocontent` for 200 or HEAD request, `notmodified` for 304 and `success` for other success request.
+Third element is consumed response object. The reason to use array is that, array form is easier to use ES6 
+destructor assign. Ex:
+
+    fetcher.get('/api').then( ([value, status, response]) => {
+      // blah...
+    })
 
 There is one more method called `request`. Is the base of all other methods. Receive four arguments: `method`,
 `url`, `data` and `options`. The method is in string format. All uppercase characters. Which will pass to 
@@ -67,3 +76,6 @@ returned Promise when server have response. And developers can use `response.ok`
 Only when status code between 200 to 299 will set `ok` to true. But jQuery also accept `304` not modified.
 And jQuery will reject all other status code. The behavior is very different. And fetcher still not decide which 
 to follow. 
+
+The rejected promise will use an array to reject([error]). The purpose for using array is to align the result format.
+
