@@ -66,9 +66,14 @@ What fetcher will do is:
 
 Fetcher methods will return a Promise just like fetch. But it will be fulfilled with different value, an 
 array(`[value, status, response]`). First element is the response value. Second element is text response status.
-Possible values: `nocontent` for 200 or HEAD request, `notmodified` for 304 and `success` for other success request.
-Third element is consumed response object. The reason to use array is that, array form is easier to use ES6 
-destructor assign. Ex:
+
+Status possible values: 
+
+* `nocontent` for 200 or HEAD request.
+* `notmodified` for 304 not modified.
+* `success` for other success request.
+
+Third element is consumed response object. The reason to use array is easier to use ES6 destructuring assign. Ex:
 
     fetcher.get('/api').then( ([value, status, response]) => {
       // blah...
