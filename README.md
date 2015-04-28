@@ -53,8 +53,15 @@ What fetcher will do is:
 
 1. Auto generate request body if necessary. (json, form-urlencoded)
 2. Set mode to `cors` if request to a different hostname.
-3. Auto parse response data. Fetcher will try to figure out what to do based on response content type and 
-`options.dataType`.
+3. Auto parse request data:
+  * JSON, if a request contains headers have `Content-Type: application/json`. The data will parsed by `JSON.stringify` before send.
+4. Auto parse response data. Fetcher will try to figure out what to do based on response content type and 
+`dataType`.
+  * JSON string will parsed by `JSON.parse`.
+  * HTML will be plain text. If you want DOM node as response. You can set `dataType` to `xml` or set `mimeType` to `text/xml`.
+  * XML will be parse by `DOMParser`.
+  * ArrayBuffer or FormData will only available if user set `dataType`.
+  * Otherwise, response will be text format.
 
 Fetcher methods will return a Promise just like fetch. But it will be fulfilled with different value, an 
 array(`[value, status, response]`). First element is the response value. Second element is text response status.
