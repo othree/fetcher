@@ -43,7 +43,7 @@ arguments:
 
 The options object will send to `fetch` and fetcher provides new options:
 
-* `contentType`: Not done, The data type of request body you are going to send. Will overwrite the one in headers.
+* `contentType`: The data type of request body you are going to send. Will overwrite the one in headers.
 * `dataType`: The data type you expect to receive from server. Supports mime type or the following shorcut
   `json`, `text` and `xml`.
 * `mimeType`: Will overwrite response mimeType before parse to data.
