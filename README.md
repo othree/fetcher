@@ -53,10 +53,11 @@ The options object will send to `fetch` and fetcher provides new options:
 What fetcher will do is:
 
 1. Auto generate request body if necessary. (json, form-urlencoded)
-2. Set mode to `cors` if request to a different hostname.
-3. Auto parse request data:
   * JSON, if a request contains headers have `Content-Type: application/json`. The data will parsed by `JSON.stringify` before send.
-4. Auto parse response data. Fetcher will try to figure out what to do based on response content type and 
+  * FormData or ArrayBuffer will be send directly.
+  * Default request body is `form-urlencoded`, use [jquery-param](https://www.npmjs.com/package/jquery-param).
+2. Set mode to `cors` if request to a different hostname.
+3. Auto parse response data. Fetcher will try to figure out what to do based on response content type and 
 `dataType`.
   * JSON string will parsed by `JSON.parse`.
   * HTML will be plain text. If you want DOM node as response. You can set `dataType` to `xml` or set `mimeType` to `text/xml`.
