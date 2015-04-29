@@ -48,11 +48,7 @@
     formData: 'FormData' in g
   };
 
-  var parseXML = function parseXML(res, mimeType) {
-    var xml;
-    var type = mimeType;
-    var mime = type ? type.split(';').unshift() : 'text/xml';
-    var text = res.text();
+  var parseXML = function parseXML(text, mimeType) {
     if (g) {
       // in browser
       // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
@@ -62,13 +58,23 @@
         xml = undefined;
       }
       if (!xml || xml.getElementsByTagName('parsererror').length) {
-        return Promise.reject(new Error('Invalid XML: ' + text));
+        throw new Error('Invalid XML: ' + text);
       }
     } else {
       // node, return plain text
       xml = text;
     }
-    return Promise.resolve(xml);
+    return xml;
+  };
+
+  var resXML = function resXML(res, mimeType) {
+    var xml;
+    var type = mimeType;
+    var mime = type ? type.split(';').unshift() : 'text/xml';
+    var text = res.text();
+    return text.then(function (text) {
+      return parseXML(text, mime);
+    });
   };
 
   var resText = function resText(res) {
@@ -91,7 +97,7 @@
     },
     plain: resText,
     text: resText,
-    xml: parseXML
+    xml: resXML
   };
 
   var isCORS = function isCORS(url) {
@@ -118,6 +124,22 @@
   var Fetcher = (function () {
     function Fetcher() {
       _classCallCheck(this, Fetcher);
+
+      this.options = {
+        method: 'get',
+        converters: {
+          'res arraybuffer': resTractors.arraybuffer,
+          'res blob': resTractors.blob,
+          'res formdata': resTractors.formdata,
+          'res html': resTractors.html,
+          'res json': resTractors.json,
+          'res plain': resTractors.text,
+          'res text': resTractors.text,
+          'res xml': resTractors.xml,
+
+          'text json': JSON.parse,
+          'text xml': parseXML }
+      };
     }
 
     _createClass(Fetcher, [{
