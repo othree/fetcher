@@ -107,7 +107,7 @@ Stat: `y`: support, `n`: not support, `n/a`: not possible, `todo`: in plan.
 
 | Feature       | Stat              |
 |---------------|-------------------|
-| accepts       | todo              |
+| accepts       | y                 |
 | async         | n/a               |
 | beforeSend    | n                 |
 | cache         | n                 |
@@ -136,19 +136,11 @@ Stat: `y`: support, `n`: not support, `n/a`: not possible, `todo`: in plan.
 | success       | use promise chain |
 | timeout       | y                 |
 | traditional   | n/a, based on dep |
-| type          | todo              |
+| type          | y                 |
 | url           | y                 |
 | username      | n/a               |
 | xhr           | n/a               |
 | xhrFields     | n/a               |
-
-
-
-
-
-
-
-
 
 
 
