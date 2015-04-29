@@ -110,7 +110,7 @@ Stat: `y`: support, `n`: not support, `n/a`: not possible, `todo`: in plan.
 | accepts         | y                 |
 | ajaxPrefilter() | n                 |
 | ajaxSetup()     | todo              |
-| ajaxTransport() | n                 |
+| ajaxTransport() | n/a               |
 | async           | n/a               |
 | beforeSend      | n                 |
 | cache           | n                 |
