@@ -80,6 +80,8 @@ Third element is consumed response object. The reason to use array is easier to 
       // blah...
     })
 
+PS. Plan to return not consumed response. But current polyfill don't support clone.
+
 There is one more method called `request`. Is the base of all other methods. Receive four arguments: `method`,
 `url`, `data` and `options`. The method is in string format. All uppercase characters. Which will pass to 
 fetch directly. And fetch will check is method valid.
