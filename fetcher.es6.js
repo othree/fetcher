@@ -132,23 +132,26 @@ class Fetcher {
 
     var extractor = null;
     var dataType = options.dataType ? options.dataType.trim() : '*';
-    var accept = '*/*';
-    if (dataType && shortContentType[dataType]) {
-      accept = shortContentType[dataType];
-      if (dataType !== '*') {
-        accept += ', ' + shortContentType['*'] + '; q=0.01';
-        extractor = resTractors[dataType.toLowerCase()];
-      }
-    }
 
     if (options.mimeType) {
       var mimeType = options.mimeType.trim();
     }
 
+    var accepts = options.accepts || '*/*';
+
+    if (dataType && shortContentType[dataType]) {
+      accepts = shortContentType[dataType];
+      if (dataType !== '*') {
+        accepts += ', ' + shortContentType['*'] + '; q=0.01';
+        extractor = resTractors[dataType.toLowerCase()];
+      }
+    }
+
     delete options.dataType;
     delete options.mimeType;
+    delete options.accepts;
 
-    headers.set('Accept', accept);
+    headers.set('Accept', accepts);
 
     var racers = [];
     if (options.timeout) {
