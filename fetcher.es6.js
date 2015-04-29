@@ -108,7 +108,7 @@ class Fetcher {
   }
 
   request(method, url, data, options = {}) {
-    var m = method || options.method || options.type || 'get';
+    var m = method || options.method || options.type || this.options.method || 'get';
     options.method = m.trim().toUpperCase();
 
     if (options.headers && options.headers["Content-Type"]) {
