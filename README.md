@@ -68,9 +68,7 @@ What fetcher will do when you do a request through it:
   * Otherwise, response will be plain text.
 
 Fetcher methods will return a Promise just like fetch. But it will be fulfilled with different value, an 
-array(`[value, status, response]`). First element is the response value. Second element is text response status.
-
-Status possible values: 
+array(`[value, status, response]`). First element is the response value. Second element is text response status. Possible status:
 
 * `nocontent` for 200 or HEAD request.
 * `notmodified` for 304 not modified.
