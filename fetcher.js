@@ -261,14 +261,35 @@
           dataType = dataType === '*' ? mimeType.split(/[\/+]/).pop().toLowerCase() || 'text' : dataType;
           extractor = resTractors[dataType];
 
-          if (!extractor) {
-            for (fromto in _this.options.converters) {
+          if (!extractor && typeof options.converters === 'object') {
+            for (fromto in options.converters) {
               var _fromto$split = fromto.split(' ');
 
               var _fromto$split2 = _slicedToArray(_fromto$split, 2);
 
               from = _fromto$split2[0];
               to = _fromto$split2[1];
+
+              if (to === dataType && resTractors[from]) {
+                extractor = resTractors[from];
+                second = _this.options.converters[fromto];
+                break;
+              }
+            }
+          }
+
+          if (!extractor) {
+            for (fromto in _this.options.converters) {
+              if (options.converters[fromto]) {
+                continue;
+              }
+
+              var _fromto$split3 = fromto.split(' ');
+
+              var _fromto$split32 = _slicedToArray(_fromto$split3, 2);
+
+              from = _fromto$split32[0];
+              to = _fromto$split32[1];
 
               if (to === dataType && resTractors[from]) {
                 extractor = resTractors[from];

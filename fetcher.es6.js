@@ -198,8 +198,20 @@ class Fetcher {
       dataType = (dataType === '*') ? mimeType.split(/[\/+]/).pop().toLowerCase() || 'text' : dataType ;
       extractor = resTractors[dataType];
 
+      if (!extractor && typeof options.converters === 'object') {
+        for (fromto in options.converters) {
+          [from, to] = fromto.split(' ');
+          if (to === dataType && resTractors[from]) {
+            extractor = resTractors[from];
+            second = this.options.converters[fromto];
+            break;
+          }
+        }
+      }
+
       if (!extractor) {
         for (fromto in this.options.converters) {
+          if (options.converters[fromto]) { continue; }
           [from, to] = fromto.split(' ');
           if (to === dataType && resTractors[from]) {
             extractor = resTractors[from];
