@@ -140,7 +140,8 @@
       value: function request(method, url, data) {
         var options = arguments[3] === undefined ? {} : arguments[3];
 
-        options.method = method.toUpperCase();
+        var m = method || options.method || options.type || 'get';
+        options.method = m.trim().toUpperCase();
 
         if (options.headers && options.headers['Content-Type']) {
           options.headers['Content-Type'] = normalizeContentType(options.headers['Content-Type']);

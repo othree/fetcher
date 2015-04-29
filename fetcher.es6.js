@@ -88,7 +88,8 @@ class Fetcher {
   }
 
   request(method, url, data, options = {}) {
-    options.method = method.toUpperCase();
+    var m = method || options.method || options.type || 'get';
+    options.method = m.trim().toUpperCase();
 
     if (options.headers && options.headers["Content-Type"]) {
       options.headers["Content-Type"] = normalizeContentType(options.headers["Content-Type"]);
