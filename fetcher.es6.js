@@ -155,7 +155,6 @@ class Fetcher {
       accepts = shortContentType[dataType];
       if (dataType !== '*') {
         accepts += ', ' + shortContentType['*'] + '; q=0.01';
-        extractor = resTractors[dataType.toLowerCase()];
       }
     }
 
@@ -195,24 +194,26 @@ class Fetcher {
       
       var contentType = res.headers.get('Content-Type') || '';
       var second = value => value
+      var fromto, from, to;
+
       mimeType = mimeType || contentType.split(';').shift();
+      dataType = (dataType === '*') ? mimeType.split(/[\/+]/).pop().toLowerCase() || 'text' : dataType ;
+      extractor = resTractors[dataType];
+
       if (!extractor) {
-        dataType = mimeType.split(/[\/+]/).pop().toLowerCase() || dataType || '';
-        dataType = (dataType === '*') ? 'text' : dataType;
-        extractor = resTractors[dataType]
-        if (!extractor) {
-          extractor = resTractors['text'];
-          if (dataType) {
-            second = this.options.converters[`text ${dataType}`];
+        for (fromto in this.options.converters) {
+          [from, to] = fromto.split(' ');
+          if (to === dataType && resTractors[from]) {
+            extractor = resTractors[from];
+            second = this.options.converters[fromto];
+            break;
           }
         }
       }
 
-      var value = second ? extractor(res, mimeType).then(second) : Promise.reject(new Error(`No converter for text to ${dataType}`));
+      var value = extractor ? extractor(res, mimeType).then(second) : Promise.reject(new Error(`No converter for response to ${dataType}`));
 
-      return Promise.all([value, statusText, res]).catch( (error) => {
-        throw([error, res]);
-      });
+      return Promise.all([value, statusText, res]).catch( error => { throw([error, res]); });
     }, error => {
       throw [error];
     }));
