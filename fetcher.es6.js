@@ -88,15 +88,6 @@ class Fetcher {
     this.options = {
       method: 'get',
       converters: {
-        'res arraybuffer': resTractors.arraybuffer,
-        'res blob':        resTractors.blob,
-        'res formdata':    resTractors.formdata,
-        'res html':        resTractors.html,
-        'res json':        resTractors.json,
-        'res plain':       resTractors.text,
-        'res text':        resTractors.text,
-        'res xml':         resTractors.xml,
-
         'text json':       JSON.parse,
         'text xml':        parseXML,
       }
