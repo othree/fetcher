@@ -101,4 +101,54 @@ to follow.
 The rejected promise will use an array to reject(`[error, response]`). Some error will not get response.
 Ex: timeout or network error.
 
+### Compare to jQuery.ajax
+
+Stat: `y`: support, `n`: not support, `n/a`: not possible, `todo`: in plan.
+
+| Feature       | Stat              |
+|---------------|-------------------|
+| accepts       | todo              |
+| async         | n/a               |
+| beforeSend    | n                 |
+| cache         | n                 |
+| complete      | use promise chain |
+| contents      | n/a               |
+| contentType   | y                 |
+| context       | n/a               |
+| converters    | n                 |
+| crossDomain   | auto              |
+| data          | y                 |
+| dataFilter    | n                 |
+| dataType      | y                 |
+| error         | use promise chain |
+| global        | n/a               |
+| headers       | y                 |
+| ifModified    | n                 |
+| isLocal       | n                 |
+| jsonp         | n                 |
+| jsonpCallback | n                 |
+| method        | y                 |
+| mimeType      | y                 |
+| password      | n/a               |
+| processData   | todo              |
+| scriptCharset | n                 |
+| statusCode    | n                 |
+| success       | use promise chain |
+| timeout       | y                 |
+| traditional   | n/a, based on dep |
+| type          | todo              |
+| url           | y                 |
+| username      | n/a               |
+| xhr           | n/a               |
+| xhrFields     | n/a               |
+
+
+
+
+
+
+
+
+
+
 
