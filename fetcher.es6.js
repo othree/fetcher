@@ -164,7 +164,7 @@ class Fetcher {
     racers.push(fetch(url, options).then( res => {
       var statusText = res.statusText;
       if (!res.ok && res.status !== 304) {
-        return Promise.reject([statusText, res]);
+        return Promise.reject([new Error(statusText), res]);
       }
 
       if ( res.status === 204 || options.method === "HEAD" ) {

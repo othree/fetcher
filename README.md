@@ -95,5 +95,7 @@ Only when status code between 200 to 299 will set `ok` to true. But jQuery also 
 And jQuery will reject all other status code. The behavior is very different. And fetcher still not decide which 
 to follow. 
 
-The rejected promise will use an array to reject(`[error]`). The purpose for using array is to align the result format.
+The rejected promise will use an array to reject(`[error, response]`). Some error will not get response.
+Ex: timeout or network error.
+
 
