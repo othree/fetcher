@@ -36,7 +36,7 @@ var parseXML = (res, mimeType) => {
       xml = undefined;
     }
     if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
-      throw( new Error("Invalid XML: " + text ));
+      return Promise.reject( new Error("Invalid XML: " + text ) );
     }
   } else {
     // node, return plain text
@@ -184,7 +184,9 @@ class Fetcher {
         dataType = mimeType.split(/[\/+]/).pop();
         extractor = resTractors[dataType.toLowerCase()] || resTractors['text'];
       }
-      return Promise.all([extractor(res, mimeType), statusText, res]);
+      return Promise.all([extractor(res, mimeType), statusText, res]).catch( (error) => {
+        throw([error, res]);
+      });
     }, error => {
       throw [error];
     }));
