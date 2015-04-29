@@ -88,8 +88,8 @@ class Fetcher {
     this.options = {
       method: 'get',
       converters: {
-        'text json':       JSON.parse,
-        'text xml':        parseXML,
+        'text json': JSON.parse,
+        'text xml':  parseXML
       }
     };
   }
@@ -194,12 +194,23 @@ class Fetcher {
       }
       
       var contentType = res.headers.get('Content-Type') || '';
+      var second = value => value
       mimeType = mimeType || contentType.split(';').shift();
       if (!extractor) {
-        dataType = mimeType.split(/[\/+]/).pop();
-        extractor = resTractors[dataType.toLowerCase()] || resTractors['text'];
+        dataType = mimeType.split(/[\/+]/).pop().toLowerCase() || dataType || '';
+        dataType = (dataType === '*') ? 'text' : dataType;
+        extractor = resTractors[dataType]
+        if (!extractor) {
+          extractor = resTractors['text'];
+          if (dataType) {
+            second = this.options.converters[`text ${dataType}`];
+          }
+        }
       }
-      return Promise.all([extractor(res, mimeType), statusText, res]).catch( (error) => {
+
+      var value = second ? extractor(res, mimeType).then(second) : Promise.reject(new Error(`No converter for text to ${dataType}`));
+
+      return Promise.all([value, statusText, res]).catch( (error) => {
         throw([error, res]);
       });
     }, error => {

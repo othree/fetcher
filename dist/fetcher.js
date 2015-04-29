@@ -180,17 +180,9 @@
       this.options = {
         method: 'get',
         converters: {
-          'res arraybuffer': resTractors.arraybuffer,
-          'res blob': resTractors.blob,
-          'res formdata': resTractors.formdata,
-          'res html': resTractors.html,
-          'res json': resTractors.json,
-          'res plain': resTractors.text,
-          'res text': resTractors.text,
-          'res xml': resTractors.xml,
-
           'text json': JSON.parse,
-          'text xml': parseXML }
+          'text xml': parseXML
+        }
       };
     }
 
@@ -212,6 +204,8 @@
     }, {
       key: 'request',
       value: function request(method, url, data) {
+        var _this = this;
+
         var options = arguments[3] === undefined ? {} : arguments[3];
 
         var m = method || options.method || options.type || this.options.method || 'get';
@@ -309,12 +303,25 @@
           }
 
           var contentType = res.headers.get('Content-Type') || '';
+          var second = function second(value) {
+            return value;
+          };
           mimeType = mimeType || contentType.split(';').shift();
           if (!extractor) {
-            dataType = mimeType.split(/[\/+]/).pop();
-            extractor = resTractors[dataType.toLowerCase()] || resTractors.text;
+            dataType = mimeType.split(/[\/+]/).pop().toLowerCase() || dataType || '';
+            dataType = dataType === '*' ? 'text' : dataType;
+            extractor = resTractors[dataType];
+            if (!extractor) {
+              extractor = resTractors.text;
+              if (dataType) {
+                second = _this.options.converters['text ' + dataType];
+              }
+            }
           }
-          return Promise.all([extractor(res, mimeType), statusText, res])['catch'](function (error) {
+
+          var value = second ? extractor(res, mimeType).then(second) : Promise.reject(new Error('No converter for text to ' + dataType));
+
+          return Promise.all([value, statusText, res])['catch'](function (error) {
             throw [error, res];
           });
         }, function (error) {
