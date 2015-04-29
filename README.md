@@ -35,6 +35,11 @@ instance of Fetcher when you include this module.
 
     var fetcher = require('fetch-er')
 
+To install, you can use `npm` or `bower` or just download `dist/fetcher.js`.
+
+    npm i fetch-er
+    bower i fetch-er
+
 The Fetcher class have the following basic methods: `delete`, `get`, `getJSON`, `head`, `options`, `post`
 and `put`. Mapping the method name to HTTP method for the method will use. All methods receives three 
 arguments:
