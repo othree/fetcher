@@ -26,12 +26,14 @@ Example
 
     fetcher.delete( '/api/users/23').then( ... )
 
-DOC
+Doc
 ---
 
 fetch-er provide a new global object for browser environment, called `fetcher`. `fetcher` is an instance
-of private Fetcher class. In other module systems like: CommonJS, AMD, NodeJS. You will get the same 
-instance of Fetcher when you require this module.
+of private `Fetcher` class. In other module systems like: CommonJS, AMD, NodeJS. You will get the same 
+instance of Fetcher when you include this module.
+
+    var fetcher = require('fetch-er')
 
 The Fetcher class have the following basic methods: `delete`, `get`, `getJSON`, `head`, `options`, `post`
 and `put`. Mapping the method name to HTTP method for the method will use. All methods receives three 
@@ -39,31 +41,31 @@ arguments:
 
 * `url`: The url location of the request
 * `data`: Optional data for the request
-* `options`: Optional options object send to fetch.
+* `options`: Optional options object send to fetch
 
-The options object will send to `fetch` and fetcher provides new options:
+The options object will send to `fetch` and fetcher provides several new options:
 
 * `contentType`: The data type of request body you are going to send. Will overwrite the one in headers.
-* `dataType`: The data type you expect to receive from server. Supports mime type or the following shorcut
+* `dataType`: The data type you expect to receive from server. Supports mime type and following shorcut
   `json`, `text` and `xml`.
 * `mimeType`: Will overwrite response mimeType before parse to data.
 * `timeout`: Will reject returned promise when time limit reach, but no actual abort now(current fetch don't have abort).
 
 
-What fetcher will do is:
+What fetcher will do when you do a request through it:
 
 1. Auto generate request body if necessary. (json, form-urlencoded)
-  * JSON, if a request contains headers have `Content-Type: application/json`. The data will parsed by `JSON.stringify` before send.
-  * FormData or ArrayBuffer will be send directly.
+  * JSON, if a request contains headers have `Content-Type: application/json` or `options.contentType` with the same value.
+    The data will parsed by `JSON.stringify` and write to body.
+  * FormData or ArrayBuffer will send to fetch directly.
   * Default request body is `form-urlencoded`, use [jquery-param](https://www.npmjs.com/package/jquery-param).
 2. Set mode to `cors` if request to a different hostname.
-3. Auto parse response data. Fetcher will try to figure out what to do based on response content type and 
-`dataType`.
+3. Autou parse response data. Fetcher will try to figure out what to do based on response content type and `options.dataType`.
   * JSON string will parsed by `JSON.parse`.
-  * HTML will be plain text. If you want DOM node as response. You can set `dataType` to `xml` or set `mimeType` to `text/xml`.
+  * HTML will be plain text. If you want DOM node as response. You can set `options.dataType` to `xml`.
   * XML will be parse by `DOMParser`.
-  * ArrayBuffer or FormData will only available if user set `dataType`.
-  * Otherwise, response will be text format.
+  * ArrayBuffer or FormData will only available if user set `options.dataType`.
+  * Otherwise, response will be plain text.
 
 Fetcher methods will return a Promise just like fetch. But it will be fulfilled with different value, an 
 array(`[value, status, response]`). First element is the response value. Second element is text response status.
