@@ -1,7 +1,8 @@
 
-var self = this;
-if (typeof global !== 'undefined') { self = global; }
-if (typeof window !== 'undefined') { self = window; }
+var g = this;
+if (typeof self   !== 'undefined') { g = self;   }
+if (typeof global !== 'undefined') { g = global; }
+if (typeof window !== 'undefined') { g = window; }
 
 import param from 'jquery-param';
 
@@ -10,7 +11,7 @@ var rnoContent = /^(?:GET|HEAD)$/;
 
 // https://github.com/github/fetch/blob/master/fetch.js#L113
 var support = {
-  blob: 'FileReader' in self && 'Blob' in self && ( () => {
+  blob: 'FileReader' in g && 'Blob' in g && ( () => {
     try {
       new Blob();
       return true
@@ -18,7 +19,7 @@ var support = {
       return false
     }
   })(),
-  formData: 'FormData' in self
+  formData: 'FormData' in g
 };
 
 var parseXML = (res, mimeType) => {
@@ -26,11 +27,11 @@ var parseXML = (res, mimeType) => {
   var type = mimeType;
   var mime = type ? type.split(';').unshift() : 'text/xml' ;
   var text = res.text();
-  if (self) {
+  if (g) {
     // in browser
     // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
     try {
-      xml = ( new self.DOMParser() ).parseFromString( text, mime );
+      xml = ( new g.DOMParser() ).parseFromString( text, mime );
     } catch ( e ) {
       xml = undefined;
     }
@@ -58,11 +59,11 @@ var resTractors = {
 };
 
 var isCORS = url => {
-  if (self.document && self.document.location && /^\w+:\/\//.test(url) ) {
+  if (g.document && g.document.location && /^\w+:\/\//.test(url) ) {
     var frags = url.replace(/^\w+:\/\//, '');
     var index = url.indexOf('/');
     var hostname = frags.substr(0, index);
-    return hostname !== self.document.location.hostname;
+    return hostname !== g.document.location.hostname;
   }
   return false;
 }

@@ -21,12 +21,15 @@
 
   var _param2 = _interopRequire(_jqueryParam);
 
-  var self = undefined;
+  var g = undefined;
+  if (typeof self !== 'undefined') {
+    g = self;
+  }
   if (typeof global !== 'undefined') {
-    self = global;
+    g = global;
   }
   if (typeof window !== 'undefined') {
-    self = window;
+    g = window;
   }
 
   // https://github.com/jquery/jquery/blob/master/src/ajax.js#L20
@@ -34,7 +37,7 @@
 
   // https://github.com/github/fetch/blob/master/fetch.js#L113
   var support = {
-    blob: 'FileReader' in self && 'Blob' in self && (function () {
+    blob: 'FileReader' in g && 'Blob' in g && (function () {
       try {
         new Blob();
         return true;
@@ -42,7 +45,7 @@
         return false;
       }
     })(),
-    formData: 'FormData' in self
+    formData: 'FormData' in g
   };
 
   var parseXML = function parseXML(res, mimeType) {
@@ -50,11 +53,11 @@
     var type = mimeType;
     var mime = type ? type.split(';').unshift() : 'text/xml';
     var text = res.text();
-    if (self) {
+    if (g) {
       // in browser
       // https://github.com/jquery/jquery/blob/master/src/ajax/parseXML.js
       try {
-        xml = new self.DOMParser().parseFromString(text, mime);
+        xml = new g.DOMParser().parseFromString(text, mime);
       } catch (e) {
         xml = undefined;
       }
@@ -92,11 +95,11 @@
   };
 
   var isCORS = function isCORS(url) {
-    if (self.document && self.document.location && /^\w+:\/\//.test(url)) {
+    if (g.document && g.document.location && /^\w+:\/\//.test(url)) {
       var frags = url.replace(/^\w+:\/\//, '');
       var index = url.indexOf('/');
       var hostname = frags.substr(0, index);
-      return hostname !== self.document.location.hostname;
+      return hostname !== g.document.location.hostname;
     }
     return false;
   };
@@ -214,7 +217,7 @@
         racers.push(fetch(url, options).then(function (res) {
           var statusText = res.statusText;
           if (!res.ok && res.status !== 304) {
-            return Promise.reject([statusText, res]);
+            return Promise.reject([new Error(statusText), res]);
           }
 
           if (res.status === 204 || options.method === 'HEAD') {
