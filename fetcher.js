@@ -224,14 +224,14 @@
         headers.set('Accept', accepts);
 
         var racers = [];
-        if (options.timeout) {
-          if (typeof options.timeout === 'number') {
-            racers.push(new Promise(function (resolve, reject) {
-              setTimeout(function () {
-                reject([new Error('timeout')]);
-              }, options.timeout);
-            }));
-          }
+
+        var timeout = options.timeout || this.options.timeout;
+        if (typeof timeout === 'number') {
+          racers.push(new Promise(function (resolve, reject) {
+            setTimeout(function () {
+              reject([new Error('timeout')]);
+            }, timeout);
+          }));
           delete options.timeout;
         }
 
