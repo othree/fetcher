@@ -105,42 +105,45 @@ Ex: timeout or network error.
 
 Stat: `y`: support, `n`: not support, `n/a`: not possible, `todo`: in plan.
 
-| Feature       | Stat              |
-|---------------|-------------------|
-| accepts       | y                 |
-| async         | n/a               |
-| beforeSend    | n                 |
-| cache         | n                 |
-| complete      | use promise chain |
-| contents      | n/a               |
-| contentType   | y                 |
-| context       | n/a               |
-| converters    | n                 |
-| crossDomain   | auto              |
-| data          | y                 |
-| dataFilter    | n                 |
-| dataType      | y                 |
-| error         | use promise chain |
-| global        | n/a               |
-| headers       | y                 |
-| ifModified    | n                 |
-| isLocal       | n                 |
-| jsonp         | n                 |
-| jsonpCallback | n                 |
-| method        | y                 |
-| mimeType      | y                 |
-| password      | n/a               |
-| processData   | todo              |
-| scriptCharset | n                 |
-| statusCode    | n                 |
-| success       | use promise chain |
-| timeout       | y                 |
-| traditional   | n/a, based on dep |
-| type          | y                 |
-| url           | y                 |
-| username      | n/a               |
-| xhr           | n/a               |
-| xhrFields     | n/a               |
+| Feature         | Stat              |
+|-----------------|-------------------|
+| accepts         | y                 |
+| ajaxPrefilter() | n                 |
+| ajaxSetup()     | todo              |
+| ajaxTransport() | n                 |
+| async           | n/a               |
+| beforeSend      | n                 |
+| cache           | n                 |
+| complete        | use promise chain |
+| contents        | n/a               |
+| contentType     | y                 |
+| context         | n/a               |
+| converters      | todo              |
+| crossDomain     | auto              |
+| data            | y                 |
+| dataFilter      | n                 |
+| dataType        | y                 |
+| error           | use promise chain |
+| global          | n/a               |
+| headers         | y                 |
+| ifModified      | n                 |
+| isLocal         | n                 |
+| jsonp           | n                 |
+| jsonpCallback   | n                 |
+| method          | y                 |
+| mimeType        | y                 |
+| password        | n/a               |
+| processData     | todo              |
+| scriptCharset   | n                 |
+| statusCode      | n                 |
+| success         | use promise chain |
+| timeout         | y                 |
+| traditional     | n/a, based on dep |
+| type            | y                 |
+| url             | y                 |
+| username        | n/a               |
+| xhr             | n/a               |
+| xhrFields       | n/a               |
 
 
 
