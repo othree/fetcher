@@ -98,6 +98,20 @@ class Fetcher {
     return param(data);
   }
 
+  setup(options) {
+    for (let k in options) {
+      let v = options[k];
+      if (typeof v === 'object') {
+        for (let kk in options) {
+          let vv = options[kk];
+          this.options[k][kk] = vv;
+        }
+      } else {
+        this.options[k] = v;
+      }
+    }
+  }
+
   request(method, url, data, options = {}) {
     var m = method || options.method || options.type || this.options.method || 'get';
     options.method = m.trim().toUpperCase();

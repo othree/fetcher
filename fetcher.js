@@ -152,6 +152,21 @@
         return _param2(data);
       })
     }, {
+      key: 'setup',
+      value: function setup(options) {
+        for (var k in options) {
+          var v = options[k];
+          if (typeof v === 'object') {
+            for (var kk in options) {
+              var vv = options[kk];
+              this.options[k][kk] = vv;
+            }
+          } else {
+            this.options[k] = v;
+          }
+        }
+      }
+    }, {
       key: 'request',
       value: function request(method, url, data) {
         var _this = this;
