@@ -54,6 +54,7 @@ npm i fetch-er
 bower i fetch-er
 ```
 
+
 The Fetcher class have the following basic methods: `delete`, `get`, `getJSON`, `head`, `options`, `post`
 and `put`. Mapping the method name to HTTP method for the method will use. All methods receives three 
 arguments:
@@ -103,6 +104,8 @@ fetcher.get('/api').then( ([value, status, response]) => {
 
 PS. Plan to return not consumed response. But current polyfill don't support clone.
 
+#### request(method, url, data, options)
+
 There is one more method called `request`. Is the base of all other methods. Receive four arguments: `method`,
 `url`, `data` and `options`. The method is in string format. All uppercase characters. Which will pass to 
 fetch directly. And fetch will check is method valid.
@@ -116,6 +119,23 @@ to follow.
 
 The rejected promise will use an array to reject(`[error, response]`). Some error will not get response.
 Ex: timeout or network error.
+
+#### setup(options)
+
+There is a method called `setup` used for setup default option. The default option will be used on every request.
+But possible to overwrite when make the request. Current supported options are `method`, `contentType`, `dataType`, 
+`mimeType`, `timeout` and `converters`. Default global options are:
+
+```javascript
+{
+  method: 'get',
+  converters: {
+    'text json': JSON.parse,
+    'text xml':  parseXML
+  }
+}
+```
+
 
 ### Compare to jQuery.ajax
 
