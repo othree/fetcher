@@ -14,17 +14,19 @@ with these stuff. Inspired by jQuery.ajax.
 Example
 -------
 
-    fetcher.get('/api/users', null, {dataType: 'json'}).then( ([value, res]) => {
-      //...
-    } )
+```javascript
+fetcher.get('/api/users', null, {dataType: 'json'}).then( ([value, res]) => {
+  //...
+} )
 
-    fetcher.getJSON('/api/users').then( ... )
+fetcher.getJSON('/api/users').then( ... )
 
-    fetcher.post('/api/users', {name: 'John'}).then( ... )
+fetcher.post('/api/users', {name: 'John'}).then( ... )
 
-    fetcher.put('/api/users',  {name: 'Wick'}).then( ... )
+fetcher.put('/api/users',  {name: 'Wick'}).then( ... )
 
-    fetcher.delete( '/api/users/23').then( ... )
+fetcher.delete('/api/users/23').then( ... )
+```
 
 fetch-er is Not
 ---------------
@@ -41,12 +43,16 @@ fetch-er provide a new global object for browser environment, called `fetcher`. 
 of private `Fetcher` class. In other module systems like: CommonJS, AMD, NodeJS. You will get the same 
 instance of Fetcher when you include this module.
 
-    var fetcher = require('fetch-er')
+```javascript
+var fetcher = require('fetch-er')
+```
 
 To install, you can use `npm` or `bower` or just download `dist/fetcher.js`.
 
-    npm i fetch-er
-    bower i fetch-er
+```shell
+npm i fetch-er
+bower i fetch-er
+```
 
 The Fetcher class have the following basic methods: `delete`, `get`, `getJSON`, `head`, `options`, `post`
 and `put`. Mapping the method name to HTTP method for the method will use. All methods receives three 
@@ -89,9 +95,11 @@ array(`[value, status, response]`). First element is the response value. Second 
 
 Third element is consumed response object. The reason to use array is easier to use ES6 destructuring assign. Ex:
 
-    fetcher.get('/api').then( ([value, status, response]) => {
-      // blah...
-    })
+```javascript
+fetcher.get('/api').then( ([value, status, response]) => {
+  // blah...
+})
+```
 
 PS. Plan to return not consumed response. But current polyfill don't support clone.
 
