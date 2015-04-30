@@ -74,13 +74,14 @@ The options object will send to `fetch` and fetcher provides several new options
 
 What fetcher will do when you do a request through it:
 
-1. Auto generate request body if necessary. (json, form-urlencoded)
+1. If method is `GET` or `HEAD`, parse data to form-urlencoded form. Append to request url.
+2. Auto generate request body if necessary. (json, form-urlencoded)
   * JSON, if a request contains headers have `Content-Type: application/json` or `options.contentType` with the same value.
     The data will parsed by `JSON.stringify` and write to body.
   * FormData or ArrayBuffer will send to fetch directly.
   * Default request body is `form-urlencoded`, use [jquery-param](https://www.npmjs.com/package/jquery-param).
-2. Set mode to `cors` if request to a different hostname.
-3. Autou parse response data. Fetcher will try to figure out what to do based on response content type and `options.dataType`.
+3. Set mode to `cors` if request to a different hostname.
+4. Autou parse response data. Fetcher will try to figure out what to do based on response content type and `options.dataType`.
   * JSON string will parsed by `JSON.parse`.
   * HTML will be plain text. If you want DOM node as response. You can set `options.dataType` to `xml`.
   * XML will be parse by `DOMParser`.
