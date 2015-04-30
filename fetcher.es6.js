@@ -156,8 +156,11 @@ class Fetcher {
       }
     }
 
-    var extractor = null;
-    var dataType = options.dataType ? options.dataType.trim() : '*';
+    var extractor;
+
+    var dataType = options.dataType || this.options.dataType || '*';
+    dataType = dataType.trim();
+    dataType = (dataType === '*') ? '' : dataType;
 
     var mimeType = options.mimeType || this.options.mimeType || '';
     mimeType = mimeType.trim();
@@ -207,7 +210,7 @@ class Fetcher {
       var second = value => value;
 
       mimeType = mimeType || contentType.split(';').shift();
-      dataType = (dataType === '*') ? mimeType.split(/[\/+]/).pop().toLowerCase() || 'text' : dataType ;
+      dataType = mimeType.split(/[\/+]/).pop().toLowerCase() || dataType || 'text';
       extractor = resTractors[dataType];
 
       if (!extractor && typeof options.converters === 'object') {
