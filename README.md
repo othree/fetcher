@@ -119,13 +119,13 @@ Ex: timeout or network error.
 
 ### Compare to jQuery.ajax
 
-Stat: `y`: support, `n`: not support, `n/a`: not possible, `todo`: in plan.
+Stat: `y`: support, `p`: partial, `n`: not support, `n/a`: not possible, `todo`: in plan.
 
 | Feature         | Stat              |
 |-----------------|-------------------|
 | accepts         | y                 |
 | ajaxPrefilter() | n                 |
-| ajaxSetup()     | todo              |
+| ajaxSetup()     | p, use setup()    |
 | ajaxTransport() | n/a               |
 | async           | n/a               |
 | beforeSend      | n                 |
@@ -134,7 +134,7 @@ Stat: `y`: support, `n`: not support, `n/a`: not possible, `todo`: in plan.
 | contents        | n/a               |
 | contentType     | y                 |
 | context         | n/a               |
-| converters      | todo              |
+| converters      | y, 2 level only   |
 | crossDomain     | auto              |
 | data            | y                 |
 | dataFilter      | n                 |
