@@ -205,16 +205,15 @@ class Fetcher {
       }
       
       var contentType = res.headers.get('Content-Type') || '';
-      var second = value => value
-      var fromto, from, to;
+      var second = value => value;
 
       mimeType = mimeType || contentType.split(';').shift();
       dataType = (dataType === '*') ? mimeType.split(/[\/+]/).pop().toLowerCase() || 'text' : dataType ;
       extractor = resTractors[dataType];
 
       if (!extractor && typeof options.converters === 'object') {
-        for (fromto in options.converters) {
-          [from, to] = fromto.split(' ');
+        for (let fromto in options.converters) {
+          let [from, to] = fromto.split(' ');
           if (to === dataType && resTractors[from]) {
             extractor = resTractors[from];
             second = this.options.converters[fromto];
@@ -224,9 +223,9 @@ class Fetcher {
       }
 
       if (!extractor) {
-        for (fromto in this.options.converters) {
+        for (let fromto in this.options.converters) {
           if (options.converters[fromto]) { continue; }
-          [from, to] = fromto.split(' ');
+          let [from, to] = fromto.split(' ');
           if (to === dataType && resTractors[from]) {
             extractor = resTractors[from];
             second = this.options.converters[fromto];

@@ -270,20 +270,19 @@
           var second = function second(value) {
             return value;
           };
-          var fromto, from, to;
 
           mimeType = mimeType || contentType.split(';').shift();
           dataType = dataType === '*' ? mimeType.split(/[\/+]/).pop().toLowerCase() || 'text' : dataType;
           extractor = resTractors[dataType];
 
           if (!extractor && typeof options.converters === 'object') {
-            for (fromto in options.converters) {
+            for (var fromto in options.converters) {
               var _fromto$split = fromto.split(' ');
 
               var _fromto$split2 = _slicedToArray(_fromto$split, 2);
 
-              from = _fromto$split2[0];
-              to = _fromto$split2[1];
+              var from = _fromto$split2[0];
+              var to = _fromto$split2[1];
 
               if (to === dataType && resTractors[from]) {
                 extractor = resTractors[from];
@@ -294,7 +293,7 @@
           }
 
           if (!extractor) {
-            for (fromto in _this.options.converters) {
+            for (var fromto in _this.options.converters) {
               if (options.converters[fromto]) {
                 continue;
               }
@@ -303,8 +302,8 @@
 
               var _fromto$split32 = _slicedToArray(_fromto$split3, 2);
 
-              from = _fromto$split32[0];
-              to = _fromto$split32[1];
+              var from = _fromto$split32[0];
+              var to = _fromto$split32[1];
 
               if (to === dataType && resTractors[from]) {
                 extractor = resTractors[from];
