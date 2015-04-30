@@ -26,6 +26,14 @@ Example
 
     fetcher.delete( '/api/users/23').then( ... )
 
+fetch-er is Not
+---------------
+
+fetch-er is not designed for every case. If you belongs to one of following situation. You should not use fetch-er:
+
+* Feeling good to use fetch API. Since it's not hard to use fetch without helper.
+* Every byte count, you need to keep your script as small as possible. Every byte matters.
+
 Doc
 ---
 
