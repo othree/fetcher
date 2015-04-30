@@ -198,7 +198,7 @@
 
           // grab and delete Content-Type header
           // fetch will set Content-Type for common cases
-          var contentType = options.contentType || headers.get('Content-Type');
+          var contentType = options.contentType || this.options.contentType || headers.get('Content-Type');
           headers['delete']('Content-Type');
 
           // set body
@@ -219,9 +219,8 @@
         var extractor = null;
         var dataType = options.dataType ? options.dataType.trim() : '*';
 
-        if (options.mimeType) {
-          var mimeType = options.mimeType.trim();
-        }
+        var mimeType = options.mimeType || this.options.mimeType || '';
+        mimeType = mimeType.trim();
 
         var accepts = options.accepts || '*/*';
 
