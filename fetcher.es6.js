@@ -119,6 +119,9 @@ class Fetcher {
     if (options.headers && options.headers["Content-Type"]) {
       options.headers["Content-Type"] = normalizeContentType(options.headers["Content-Type"]);
     }
+    if (options.contentType) {
+      options.contentType = normalizeContentType(options.contentType);
+    }
     var headers = new Headers(options.headers || {});
     options.headers = headers;
 
