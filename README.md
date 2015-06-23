@@ -81,7 +81,7 @@ What fetcher will do when you do a request through it:
   * FormData or ArrayBuffer will send to fetch directly.
   * Default request body is `form-urlencoded`, use [jquery-param](https://www.npmjs.com/package/jquery-param).
 3. Set mode to `cors` if request to a different hostname.
-4. Autou parse response data. Fetcher will try to figure out what to do based on response content type and `options.dataType`.
+4. Auto parse response data. Fetcher will try to figure out what to do based on response content type and `options.dataType`.
   * JSON string will parsed by `JSON.parse`.
   * HTML will be plain text. If you want DOM node as response. You can set `options.dataType` to `xml`.
   * XML will be parse by `DOMParser`.
