@@ -1,6 +1,6 @@
 {
   "name": "fetch-er",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "WHATWG fetch helper",
   "homepage": "https://github.com/othree/fetcher",
   "author": {
@@ -12,11 +12,12 @@
     "url": "https://github.com/othree/fetcher.git"
   },
   "browser": "dist/fetcher.js",
-  "main": "fetcher.js",
+  "main": "fetcher.node.js",
   "engines": {
     "node": ">=0.8.0"
   },
   "dependencies": {
+    "node-fetch": "*",
     "jquery-param": "*"
   },
   "devDependencies": {
@@ -24,7 +25,6 @@
     "expect": "*",
     "istanbul": "*",
     "mocha": "*",
-    "node-fetch": "*",
     "should": "*",
     "should-promised": "^0.2.1",
     "sinon": "*"
