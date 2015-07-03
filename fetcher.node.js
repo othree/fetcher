@@ -12,8 +12,10 @@
   }
 })(this, function (exports, module, _jqueryParam) {
   'use strict';
-  var Headers = require('node-fetch/lib/headers');
-  var fetch = require('node-fetch');
+  if (global && !global.Headers) {
+    global.Headers = require('node-fetch/lib/headers');
+    global.fetch = require('node-fetch');
+  }
 
   var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
 
